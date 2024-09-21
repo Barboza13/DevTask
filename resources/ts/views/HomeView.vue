@@ -2,7 +2,7 @@
 
 <template>
     <div class="main-container">
-        <h1>Hello World!</h1>
+        <h1>Home View</h1>
     </div>
 </template>
 

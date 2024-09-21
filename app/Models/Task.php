@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Task extends Model
@@ -12,9 +13,11 @@ class Task extends Model
 
     protected $fillable = [
         "id",
+        "member_id",
         "project_id",
-        "name",
+        "title",
         "description",
+        "deadline",
         "status",
     ];
 
@@ -23,4 +26,22 @@ class Task extends Model
         "updated_at",
         "deleted_at",
     ];
+
+    /**
+     * Relationship with members.
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function member(): HasOne
+    {
+        return $this->hasOne(Member::class);
+    }
+
+    /**
+     * Relationship with projects.
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function project(): HasOne
+    {
+        return $this->hasOne(Project::class);
+    }
 }

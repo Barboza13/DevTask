@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-    import IndexView from "@/ts/views/IndexView.vue"
+    import Navbar from "@/ts/components/Navbar.vue"
 </script>
 
 <template>
-    <IndexView />
+    <Navbar />
+    <router-view />
 </template>
 
 <style lang="scss">

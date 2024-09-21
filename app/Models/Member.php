@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Member extends Model
@@ -12,7 +14,6 @@ class Member extends Model
 
     protected $fillable = [
         "id",
-        "task_id",
         "name",
         "last_name",
         "email",
@@ -23,4 +24,22 @@ class Member extends Model
         "updated_at",
         "deleted_at",
     ];
+
+    /**
+     * Relationship with projects.
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function projects(): BelongsToMany
+    {
+        return $this->belongsToMany(Project::class);
+    }
+
+    /**
+     * Relationship with tasks.
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function tasks(): BelongsTo
+    {
+        return $this->belongsTo(Task::class);
+    }
 }
