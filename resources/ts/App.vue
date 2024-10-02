@@ -1,13 +1,12 @@
 <script lang="ts" setup>
-    import Navbar from "@/ts/components/Navbar.vue"
+    import HomeView from "./views/HomeView.vue"
 </script>
 
 <template>
-    <Navbar />
     <router-view />
 </template>
 
-<style lang="scss">
+<style>
     * {
         font-family: "Ubuntu", sans-serif;
         box-sizing: border-box;

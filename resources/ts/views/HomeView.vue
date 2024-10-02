@@ -1,17 +1,9 @@
-<script setup lang="ts"></script>
+<script lang="ts" setup>
+    import MainLayout from "@/ts/layouts/MainLayout.vue"
+</script>
 
 <template>
-    <div class="main-container">
-        <h1>Home View</h1>
-    </div>
+    <MainLayout />
 </template>
 
-<style lang="scss" scoped>
-    .main-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        background: $backgroundColor;
-    }
-</style>
+<style scoped></style>
