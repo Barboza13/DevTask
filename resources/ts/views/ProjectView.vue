@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-    import MainLayout from "@/ts/layouts/MainLayout.vue"
-    import CreateProjectForm from "@/ts/components/CreateProjectForm.vue"
+    import MainLayout from "@layouts/MainLayout.vue"
+    import CreateProjectForm from "@components/CreateProjectForm.vue"
     import { ref, Ref } from "vue"
 
     const isFormVisible: Ref = ref(false)

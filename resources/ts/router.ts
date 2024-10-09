@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router"
-import HomeView from "@/ts/views/HomeView.vue"
-import TaskView from "@/ts/views/TaskView.vue"
-import MemberView from "@/ts/views/MemberView.vue"
-import ProjectView from "@/ts/views/ProjectView.vue"
+import HomeView from "@views/HomeView.vue"
+import TaskView from "@views/TaskView.vue"
+import MemberView from "@views/MemberView.vue"
+import ProjectView from "@views/ProjectView.vue"
 
 const routes = [
     {

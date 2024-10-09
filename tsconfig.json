@@ -11,7 +11,10 @@
         "sourceMap": true,
         "baseUrl": ".",
         "paths": {
-            "@/*": ["resources/*"]
+            "@/*": ["resources/ts/*"],
+            "@components/*": ["resources/ts/components/*"],
+            "@views/*": ["resources/ts/views/*"],
+            "@layouts/*": ["resources/ts/layouts/*"]
         }
     },
     "include": ["resources/ts/**/*.ts", "resources/ts/**/*.vue"],
