@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProjectRequest;
 use App\Models\Project;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
     /**
-     * Summary of index
+     * Get projects.
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(): JsonResponse
@@ -19,11 +21,21 @@ class ProjectController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Save project.
+     * @param \App\Http\Requests\ProjectRequest $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(ProjectRequest $request): JsonResponse
     {
-        //
+        try {
+            $project = Project::create($request->validated());
+            return response()->json(["project" => $project], 201);
+        } catch (Exception $e) {
+            return response()->json([
+                "message" => "Ocurrio un error",
+                "error" => $e->getMessage(),
+            ], 422);
+        }
     }
 
     /**

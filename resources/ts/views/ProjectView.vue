@@ -1,13 +1,26 @@
 <script lang="ts" setup>
     import MainLayout from "@layouts/MainLayout.vue"
     import CreateProjectForm from "@components/CreateProjectForm.vue"
-    import { ref, Ref } from "vue"
+    import { useStoreProject } from "@store/storeProject"
+    import { ref, Ref, onMounted, onUnmounted } from "vue"
 
+    import type { ProjectResponse } from "@interfaces/projects"
+
+    const store = useStoreProject()
     const isFormVisible: Ref = ref(false)
 
-    const showForm: void = () => (isFormVisible.value = true)
+    const showForm = (): void => (isFormVisible.value = true)
+    const hideForm = (): void => (isFormVisible.value = false)
 
-    const hideForm: void = () => (isFormVisible.value = false)
+    onMounted(() => {
+        store.getProjects()
+    })
+
+    const projects: Array<ProjectResponse> = store.projects
+
+    onUnmounted(() => {
+        projects.length = 0
+    })
 </script>
 
 <template>
@@ -18,7 +31,7 @@
             >
                 <thead class="border-b-[1px] border-b-black h-[60px] w-full">
                     <div class="flex h-full justify-around items-center">
-                        <h1 class="text-2xl">Proyectos exitentes</h1>
+                        <h1 class="text-2xl">Proyectos existentes</h1>
                         <button
                             class="bg-green-500 text-white rounded-md p-2"
                             @click="showForm"
@@ -30,7 +43,13 @@
                 </thead>
                 <tbody class="w-full h-full">
                     <tr>
-                        <td></td>
+                        <td
+                            v-for="project in projects"
+                            :key="project.id"
+                            class="flex flex-col bg-red-500"
+                        >
+                            {{ project.name }}
+                        </td>
                     </tr>
                 </tbody>
             </table>

@@ -15,9 +15,10 @@ export default defineConfig({
         alias: {
             "@": path.resolve(__dirname, "resources/ts"),
             "@views": path.resolve(__dirname, "resources/ts/views"),
-            "@views": path.resolve(__dirname, "resources/ts/views"),
+            "@interfaces": path.resolve(__dirname, "resources/ts/interfaces"),
             "@components": path.resolve(__dirname, "resources/ts/components"),
             "@layouts": path.resolve(__dirname, "resources/ts/layouts"),
+            "@store": path.resolve(__dirname, "resources/ts/store"),
         },
     },
 })

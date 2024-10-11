@@ -18,6 +18,8 @@ class Project extends Model
         "deadline",
     ];
 
+    protected $dates = ["deadline"];
+
     protected $hidden = [
         "created_at",
         "updated_at",
