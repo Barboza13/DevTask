@@ -7,14 +7,13 @@
     import type { ProjectResponse } from "@interfaces/projects"
 
     const store = useStoreProject()
-    const isFormVisible: Ref = ref(false)
+    store.getProjects()
 
+    const isFormVisible: Ref = ref(false)
     const showForm = (): void => (isFormVisible.value = true)
     const hideForm = (): void => (isFormVisible.value = false)
 
-    onMounted(() => {
-        store.getProjects()
-    })
+    onMounted(() => {})
 
     const projects: Array<ProjectResponse> = store.projects
 
@@ -27,13 +26,17 @@
     <MainLayout>
         <template v-slot:main>
             <table
-                class="flex flex-col bg-gray-200 w-[1200px] h-[590px] rounded-xl p-2"
+                class="flex flex-col bg-background w-[1200px] h-[590px] rounded-xl p-2"
             >
-                <thead class="border-b-[1px] border-b-black h-[60px] w-full">
+                <thead
+                    class="border-b-[1px] border-b-secondary h-[60px] w-full"
+                >
                     <div class="flex h-full justify-around items-center">
-                        <h1 class="text-2xl">Proyectos existentes</h1>
+                        <h1 class="text-2xl text-secondary">
+                            Proyectos existentes
+                        </h1>
                         <button
-                            class="bg-green-500 text-white rounded-md p-2"
+                            class="bg-green-600 hover:bg-green-700 text-white rounded-md p-2"
                             @click="showForm"
                         >
                             Nuevo registro
@@ -41,16 +44,17 @@
                         </button>
                     </div>
                 </thead>
-                <tbody class="w-full h-full">
-                    <tr>
-                        <td
-                            v-for="project in projects"
-                            :key="project.id"
-                            class="flex flex-col bg-red-500"
-                        >
+                <tbody class="grid grid-cols-8 w-full h-full gap-2">
+                    <div
+                        v-for="project in projects"
+                        :key="project.id"
+                        class="flex justify-center items-center w-32 h-32 bg-primary text-white rounded-xl cursor-pointer hover:scale-105 duration-300 mt-2"
+                    >
+                        <h1 class="flex flex-col justify-center items-center">
+                            <v-icon name="fa-file-code" scale="3" />
                             {{ project.name }}
-                        </td>
-                    </tr>
+                        </h1>
+                    </div>
                 </tbody>
             </table>
             <CreateProjectForm :isVisible="isFormVisible" @close="hideForm" />

@@ -33,7 +33,7 @@
 <template>
     <form
         v-if="isVisible"
-        class="flex flex-col justify-start items-center absolute bg-blue-700 w-[600px] h-[600px] text-white rounded-md z-[1000]"
+        class="flex flex-col justify-start items-center absolute bg-primary w-[600px] h-[600px] text-white rounded-md z-[1000]"
         @submit="handleSubmit"
     >
         <div class="flex justify-end w-full p-2">
@@ -44,26 +44,33 @@
                 @click="closeForm"
             />
         </div>
-        <h1 class="mb-4">Nuevo proyecto</h1>
-        <label for="name">Nombre del proyecto</label>
-        <input
-            class="bg-transparent border-b-2 border-white outline-none"
-            type="text"
-            v-model="name"
-            name="name"
-            required
-        />
-        <label for="deadline">Fecha limite</label>
-        <input
-            class="bg-transparent border-b-2 border-white outline-none"
-            type="date"
-            v-model="deadline"
-            name="deadline"
-            required
-        />
+        <h1 class="text-3xl mb-8">Nuevo proyecto</h1>
+
+        <div class="flex flex-col w-[90%] mb-6">
+            <label class="mb-2" for="name">Nombre del proyecto</label>
+            <input
+                class="w-full h-10 bg-white text-black outline-none rounded-lg p-2"
+                type="text"
+                v-model="name"
+                name="name"
+                required
+            />
+        </div>
+
+        <div class="flex flex-col w-[90%] mb-6">
+            <label class="mb-2" for="deadline">Fecha limite</label>
+            <input
+                class="w-full h-10 bg-white text-black outline-none p-2 rounded-lg"
+                type="date"
+                v-model="deadline"
+                name="deadline"
+                required
+            />
+        </div>
+
         <div class="flex justify-end w-full">
             <button
-                class="bg-green-500 hover:bg-green-600 text-1xl rounded-md p-2 mr-4 w-36"
+                class="bg-green-600 hover:bg-green-700 text-1xl text-white rounded-md p-2 mr-4 w-36"
                 type="submit"
             >
                 Guardar
