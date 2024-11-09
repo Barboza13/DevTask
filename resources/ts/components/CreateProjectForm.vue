@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-    import { defineProps, defineEmits, Ref, ref } from "vue"
+    import { Ref, ref } from "vue"
     import { useStoreProject } from "@store/storeProject"
 
-    import type { Project } from "@/interfaces/projects"
+    import type { Project, SaveProjectResponse } from "@interfaces/projects"
 
     const props = defineProps({
         isVisible: {
@@ -11,10 +11,14 @@
         },
     })
 
-    const store = useStoreProject()
     const emit = defineEmits(["close"])
+
+    const store = useStoreProject()
     const name: Ref<string> = ref("")
+    const description: Ref<string> = ref("")
     const deadline: Ref<string> = ref("")
+    let status: Ref<boolean> = ref(false)
+    let message: Ref<string> = ref("")
 
     const closeForm = (): void => emit("close")
 
@@ -24,9 +28,24 @@
         const project: Project = {
             name: name.value,
             deadline: deadline.value,
+            description: description.value,
         }
 
-        store.saveProject(project)
+        store
+            .saveProject(project)
+            .then((data) => {
+                message.value = data.message
+                status.value = data.status
+
+                name.value = ""
+                deadline.value = ""
+                description.value = ""
+
+                store.getProjects()
+            })
+            .catch((error) => {
+                console.log(error)
+            })
     }
 </script>
 
@@ -46,6 +65,10 @@
         </div>
         <h1 class="text-3xl mb-8">Nuevo proyecto</h1>
 
+        <p :class="status.value ? 'text-green-500' : 'text-red-500'">
+            {{ message.value }}
+        </p>
+
         <div class="flex flex-col w-[90%] mb-6">
             <label class="mb-2" for="name">Nombre del proyecto</label>
             <input
@@ -55,6 +78,17 @@
                 name="name"
                 required
             />
+        </div>
+
+        <div class="flex flex-col w-[90%] mb-6">
+            <label class="mb-2" for="description">Descripcion</label>
+            <textarea
+                class="w-full h-20 bg-white text-black outline-none rounded-lg p-2"
+                type="text"
+                v-model="description"
+                name="description"
+                required
+            ></textarea>
         </div>
 
         <div class="flex flex-col w-[90%] mb-6">

@@ -1,15 +1,14 @@
-interface ProjectResponse {
-    id: number
-    name: string
-    deadline: string
-    created_at: string
-    updated_at: string
-    deleted_at: string
-}
-
 interface Project {
+    id: string
     name: string
     deadline: string
+    description: string
 }
 
-export { ProjectResponse, Project }
+interface SaveProjectResponse {
+    project: Object
+    message: string
+    status: boolean
+}
+
+export { Project, SaveProjectResponse }

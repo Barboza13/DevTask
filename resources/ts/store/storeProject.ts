@@ -1,10 +1,11 @@
 import { defineStore } from "pinia"
-import type { ProjectResponse, Project } from "@interfaces/projects"
+import { Ref, ref } from "vue"
+import type { Project } from "@interfaces/projects"
 
 export const useStoreProject = defineStore("project", () => {
     const API: string = "http://localhost:8000/api/projects"
 
-    const projects: Array<ProjectResponse> = []
+    const projects: Ref<Array<Project>> = ref([])
 
     const getProjects = async (): Promise<void> => {
         try {
@@ -12,13 +13,40 @@ export const useStoreProject = defineStore("project", () => {
                 method: "GET",
             })
 
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`)
+            }
+
             const json = await response.json()
 
-            json.data.forEach((project: ProjectResponse) =>
-                projects.push(project),
+            json.projects.forEach((project: Project) =>
+                projects.value.push(project),
             )
         } catch (error) {
             console.error(`Ocurrio un error: ${error}`)
+        }
+    }
+
+    const resetProjects = (): void => {
+        projects.value = []
+    }
+
+    const getProject = async (id: string): Promise<Project | null> => {
+        try {
+            const response = await fetch(`/api/projects/${id}`, {
+                method: "GET",
+            })
+
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`)
+            }
+
+            const json = await response.json()
+
+            return json.project
+        } catch (error) {
+            console.error(`Ocurrio un error: ${error}`)
+            return null
         }
     }
 
@@ -32,11 +60,45 @@ export const useStoreProject = defineStore("project", () => {
                 body: JSON.stringify(project),
             })
 
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`)
+            }
+
             const json = await response.json()
+
+            return json
         } catch (error) {
             console.error(`Ocurrio un error: ${error}`)
         }
     }
 
-    return { projects, getProjects, saveProject }
+    const deleteProject = async (id: string): Promise<void> => {
+        try {
+            const response = await fetch(`/api/projects/${id}`, {
+                method: "DELETE",
+            })
+
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`)
+            }
+
+            const json = response.json()
+
+            resetProjects()
+            await getProjects()
+
+            return json
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    return {
+        projects,
+        getProjects,
+        getProject,
+        saveProject,
+        resetProjects,
+        deleteProject,
+    }
 })

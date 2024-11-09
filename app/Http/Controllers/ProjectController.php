@@ -7,6 +7,7 @@ use App\Models\Project;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ProjectController extends Controller
 {
@@ -17,7 +18,7 @@ class ProjectController extends Controller
     public function index(): JsonResponse
     {
         $projects = Project::all();
-        return response()->json(["data" => $projects], 200);
+        return response()->json(["projects" => $projects], 200);
     }
 
     /**
@@ -29,21 +30,39 @@ class ProjectController extends Controller
     {
         try {
             $project = Project::create($request->validated());
-            return response()->json(["project" => $project], 201);
+            return response()->json([
+                "project" => $project,
+                "message" => "Proyecto creado exitosamente.",
+                "status" => true
+            ], 201);
         } catch (Exception $e) {
             return response()->json([
                 "message" => "Ocurrio un error",
+                "status" => false,
                 "error" => $e->getMessage(),
             ], 422);
         }
     }
 
     /**
-     * Display the specified resource.
+     * Show project.
+     * @param string $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show(string $id)
+    public function show(string $id): JsonResponse
     {
-        //
+        try {
+            $project = Project::find($id);
+            
+            return response()->json([
+                "project" => $project,
+                "status" => true
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                "status" => false
+            ], 404);
+        }
     }
 
     /**
@@ -55,10 +74,24 @@ class ProjectController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete project.
+     * @param string $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(string $id)
+    public function destroy(string $id): JsonResponse
     {
-        //
+        try {
+            $project = Project::find($id);
+            $project->delete();
+
+            return response()->json([
+                "message" => "Registro eliminado exitosamente.",
+            ], 200);
+        } catch(Exception $e) {
+            Log::error("Error: " . $e->getMessage());
+            return response()->json([
+                "message" => "Error al eliminar el registro.",
+            ], 422);
+        }
     }
 }
