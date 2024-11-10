@@ -32,14 +32,13 @@ class ProjectController extends Controller
             $project = Project::create($request->validated());
             return response()->json([
                 "project" => $project,
-                "message" => "Proyecto creado exitosamente.",
-                "status" => true
+                "message" => "Proyecto guardado exitosamente.",
             ], 201);
         } catch (Exception $e) {
+            Log::error("Error: " . $e->getMessage());
             return response()->json([
-                "message" => "Ocurrio un error",
-                "status" => false,
-                "error" => $e->getMessage(),
+                "message" => "Ocurrio un error al guardar el proyecto.",
+                "error" => $e->getMessage()
             ], 422);
         }
     }

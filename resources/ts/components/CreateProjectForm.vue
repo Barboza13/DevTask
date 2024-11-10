@@ -2,7 +2,7 @@
     import { Ref, ref } from "vue"
     import { useStoreProject } from "@store/storeProject"
 
-    import type { Project, SaveProjectResponse } from "@interfaces/projects"
+    import type { Project } from "@interfaces/projects"
 
     const props = defineProps({
         isVisible: {
@@ -17,8 +17,7 @@
     const name: Ref<string> = ref("")
     const description: Ref<string> = ref("")
     const deadline: Ref<string> = ref("")
-    let status: Ref<boolean> = ref(false)
-    let message: Ref<string> = ref("")
+    const message: Ref<string> = ref("")
 
     const closeForm = (): void => emit("close")
 
@@ -34,14 +33,15 @@
         store
             .saveProject(project)
             .then((data) => {
-                message.value = data.message
-                status.value = data.status
+                if (data) {
+                    message.value = data.message
+                }
+
+                setTimeout(() => (message.value = ""), 3000)
 
                 name.value = ""
                 deadline.value = ""
                 description.value = ""
-
-                store.getProjects()
             })
             .catch((error) => {
                 console.log(error)
@@ -65,8 +65,8 @@
         </div>
         <h1 class="text-3xl mb-8">Nuevo proyecto</h1>
 
-        <p :class="status.value ? 'text-green-500' : 'text-red-500'">
-            {{ message.value }}
+        <p v-if="message" class="text-white">
+            {{ message }}
         </p>
 
         <div class="flex flex-col w-[90%] mb-6">
@@ -76,6 +76,7 @@
                 type="text"
                 v-model="name"
                 name="name"
+                id="name"
                 required
             />
         </div>
@@ -87,6 +88,7 @@
                 type="text"
                 v-model="description"
                 name="description"
+                id="description"
                 required
             ></textarea>
         </div>
@@ -98,6 +100,7 @@
                 type="date"
                 v-model="deadline"
                 name="deadline"
+                id="deadline"
                 required
             />
         </div>

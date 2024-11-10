@@ -1,14 +1,14 @@
 interface Project {
-    id: string
+    id?: string
     name: string
     deadline: string
     description: string
 }
 
 interface SaveProjectResponse {
-    project: Object
+    project?: Project
     message: string
-    status: boolean
+    error?: string
 }
 
 export { Project, SaveProjectResponse }

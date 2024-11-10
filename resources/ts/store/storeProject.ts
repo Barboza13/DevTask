@@ -1,6 +1,6 @@
 import { defineStore } from "pinia"
 import { Ref, ref } from "vue"
-import type { Project } from "@interfaces/projects"
+import type { Project, SaveProjectResponse } from "@interfaces/projects"
 
 export const useStoreProject = defineStore("project", () => {
     const API: string = "http://localhost:8000/api/projects"
@@ -50,7 +50,9 @@ export const useStoreProject = defineStore("project", () => {
         }
     }
 
-    const saveProject = async (project: Project): Promise<void> => {
+    const saveProject = async (
+        project: Project,
+    ): Promise<SaveProjectResponse | null> => {
         try {
             const response = await fetch(API, {
                 method: "POST",
@@ -61,14 +63,22 @@ export const useStoreProject = defineStore("project", () => {
             })
 
             if (!response.ok) {
-                throw new Error(`Error HTTP: ${response.status}`)
+                const errorData = await response.json()
+                console.error(
+                    `Error en la creacion del proyecto: ${errorData.message}`,
+                )
+                return null
             }
 
-            const json = await response.json()
+            const json: SaveProjectResponse = await response.json()
+
+            resetProjects()
+            await getProjects()
 
             return json
         } catch (error) {
             console.error(`Ocurrio un error: ${error}`)
+            return null
         }
     }
 
