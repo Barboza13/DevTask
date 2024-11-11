@@ -1,13 +1,17 @@
 <script lang="ts" setup>
-    import { Ref, ref } from "vue"
+    import { Ref, ref, PropType } from "vue"
     import { useStoreProject } from "@store/storeProject"
 
     import type { Project } from "@interfaces/projects"
 
     const props = defineProps({
-        isVisible: {
+        isUpdate: {
             type: Boolean,
-            required: true,
+            required: false,
+        },
+        project: {
+            type: Object as PropType<Project>,
+            required: false,
         },
     })
 
@@ -18,6 +22,12 @@
     const description: Ref<string> = ref("")
     const deadline: Ref<string> = ref("")
     const message: Ref<string> = ref("")
+
+    if (props.isUpdate) {
+        name.value = props.project?.name ?? ""
+        description.value = props.project?.description ?? ""
+        deadline.value = props.project?.deadline ?? ""
+    }
 
     const closeForm = (): void => emit("close")
 
@@ -30,28 +40,42 @@
             description: description.value,
         }
 
-        store
-            .saveProject(project)
-            .then((data) => {
-                if (data) {
-                    message.value = data.message
-                }
+        if (props.isUpdate) {
+            store
+                .updateProject(project, props.project?.id ?? "")
+                .then((data) => {
+                    if (data) {
+                        message.value = data.message
+                    }
 
-                setTimeout(() => (message.value = ""), 3000)
+                    setTimeout(() => (message.value = ""), 3000)
+                })
+                .catch((error) => {
+                    console.error(error)
+                })
+        } else {
+            store
+                .saveProject(project)
+                .then((data) => {
+                    if (data) {
+                        message.value = data.message
+                    }
 
-                name.value = ""
-                deadline.value = ""
-                description.value = ""
-            })
-            .catch((error) => {
-                console.log(error)
-            })
+                    setTimeout(() => (message.value = ""), 3000)
+
+                    name.value = ""
+                    deadline.value = ""
+                    description.value = ""
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+        }
     }
 </script>
 
 <template>
     <form
-        v-if="isVisible"
         class="flex flex-col justify-start items-center absolute bg-primary w-[600px] h-[600px] text-white rounded-md z-[1000]"
         @submit="handleSubmit"
     >
@@ -107,6 +131,14 @@
 
         <div class="flex justify-end w-full">
             <button
+                v-if="props.isUpdate"
+                class="bg-green-600 hover:bg-green-700 text-1xl text-white rounded-md p-2 mr-4 w-36"
+                type="submit"
+            >
+                Actualizar
+            </button>
+            <button
+                v-else="props.isUpdate"
                 class="bg-green-600 hover:bg-green-700 text-1xl text-white rounded-md p-2 mr-4 w-36"
                 type="submit"
             >

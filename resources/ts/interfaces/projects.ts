@@ -5,10 +5,10 @@ interface Project {
     description: string
 }
 
-interface SaveProjectResponse {
+interface ProjectResponse {
     project?: Project
     message: string
     error?: string
 }
 
-export { Project, SaveProjectResponse }
+export { Project, ProjectResponse }

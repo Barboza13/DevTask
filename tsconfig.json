@@ -16,7 +16,8 @@
             "@views/*": ["resources/ts/views/*"],
             "@layouts/*": ["resources/ts/layouts/*"],
             "@store/*": ["resources/ts/store/*"],
-            "@interfaces/*": ["resources/ts/interfaces/*"]
+            "@interfaces/*": ["resources/ts/interfaces/*"],
+            "@transitions/*": ["resources/ts/transitions/*"]
         }
     },
     "include": ["resources/ts/**/*.ts", "resources/ts/**/*.vue"],

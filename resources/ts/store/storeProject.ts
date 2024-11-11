@@ -1,6 +1,6 @@
 import { defineStore } from "pinia"
 import { Ref, ref } from "vue"
-import type { Project, SaveProjectResponse } from "@interfaces/projects"
+import type { Project, ProjectResponse } from "@interfaces/projects"
 
 export const useStoreProject = defineStore("project", () => {
     const API: string = "http://localhost:8000/api/projects"
@@ -52,7 +52,7 @@ export const useStoreProject = defineStore("project", () => {
 
     const saveProject = async (
         project: Project,
-    ): Promise<SaveProjectResponse | null> => {
+    ): Promise<ProjectResponse | null> => {
         try {
             const response = await fetch(API, {
                 method: "POST",
@@ -70,7 +70,7 @@ export const useStoreProject = defineStore("project", () => {
                 return null
             }
 
-            const json: SaveProjectResponse = await response.json()
+            const json: ProjectResponse = await response.json()
 
             resetProjects()
             await getProjects()
@@ -103,6 +103,41 @@ export const useStoreProject = defineStore("project", () => {
         }
     }
 
+    const updateProject = async (
+        project: Project,
+        id: string,
+    ): Promise<ProjectResponse | null> => {
+        if (!id) return null
+
+        try {
+            const response = await fetch(`/api/projects/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(project),
+            })
+
+            if (!response.ok) {
+                const errorData = await response.json()
+                console.error(
+                    `Error en la creacion del proyecto: ${errorData.message}`,
+                )
+                return null
+            }
+
+            const json: ProjectResponse = await response.json()
+
+            resetProjects()
+            await getProjects()
+
+            return json
+        } catch (error) {
+            console.error(error)
+            return null
+        }
+    }
+
     return {
         projects,
         getProjects,
@@ -110,5 +145,6 @@ export const useStoreProject = defineStore("project", () => {
         saveProject,
         resetProjects,
         deleteProject,
+        updateProject,
     }
 })

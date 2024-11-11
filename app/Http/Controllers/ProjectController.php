@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProjectRequest;
 use App\Models\Project;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class ProjectController extends Controller
@@ -65,11 +65,30 @@ class ProjectController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update project.
+     * @param \App\Http\Requests\ProjectRequest $request
+     * @param string $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, string $id)
+    public function update(ProjectRequest $request, string $id): JsonResponse
     {
-        //
+        try {
+            $project = Project::findOrFail($id);
+            $project->update($request->validated());
+
+            return response()->json([
+                "project" => $project,
+                "message" => "Proyecto actualizado correctamente."
+            ], 200);
+        } catch(ModelNotFoundException $e) {
+            return response()->json(["message" => "Proyecto no encontrado."], 404);
+        } catch (Exception $e) {
+            Log::error("Error: " . $e->getMessage());
+            return response()->json([
+                "message" => "Error al actualizar el proyecto.",
+                "error" => $e->getMessage()
+            ], 422);
+        }
     }
 
     /**
@@ -89,7 +108,7 @@ class ProjectController extends Controller
         } catch(Exception $e) {
             Log::error("Error: " . $e->getMessage());
             return response()->json([
-                "message" => "Error al eliminar el registro.",
+                "message" => "Error al eliminar el proyecto.",
             ], 422);
         }
     }
