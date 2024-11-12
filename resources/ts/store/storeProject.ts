@@ -3,7 +3,7 @@ import { Ref, ref } from "vue"
 import type { Project, ProjectResponse } from "@interfaces/projects"
 
 export const useStoreProject = defineStore("project", () => {
-    const API: string = "http://localhost:8000/api/projects"
+    const API: string = "/api/projects"
 
     const projects: Ref<Array<Project>> = ref([])
 
@@ -14,16 +14,17 @@ export const useStoreProject = defineStore("project", () => {
             })
 
             if (!response.ok) {
-                throw new Error(`Error HTTP: ${response.status}`)
+                const errorData = await response.json()
+                console.error(`Error: ${errorData.message}`)
             }
 
-            const json = await response.json()
+            const json: ProjectResponse = await response.json()
 
-            json.projects.forEach((project: Project) =>
+            json.projects?.forEach((project: Project) =>
                 projects.value.push(project),
             )
         } catch (error) {
-            console.error(`Ocurrio un error: ${error}`)
+            console.error(`Error al obtener los proyectos: ${error}`)
         }
     }
 
@@ -31,21 +32,22 @@ export const useStoreProject = defineStore("project", () => {
         projects.value = []
     }
 
-    const getProject = async (id: string): Promise<Project | null> => {
+    const getProject = async (id: string): Promise<ProjectResponse | null> => {
         try {
-            const response = await fetch(`/api/projects/${id}`, {
+            const response = await fetch(`${API}/${id}`, {
                 method: "GET",
             })
 
             if (!response.ok) {
-                throw new Error(`Error HTTP: ${response.status}`)
+                const errorData = await response.json()
+                console.error(`Error: ${errorData.message}`)
             }
 
-            const json = await response.json()
+            const json: ProjectResponse = await response.json()
 
-            return json.project
+            return json
         } catch (error) {
-            console.error(`Ocurrio un error: ${error}`)
+            console.error(`Error al obtener el proyecto: ${error}`)
             return null
         }
     }
@@ -64,42 +66,39 @@ export const useStoreProject = defineStore("project", () => {
 
             if (!response.ok) {
                 const errorData = await response.json()
-                console.error(
-                    `Error en la creacion del proyecto: ${errorData.message}`,
-                )
+                console.error(`Error: ${errorData.message}`)
                 return null
             }
 
             const json: ProjectResponse = await response.json()
 
-            resetProjects()
-            await getProjects()
-
             return json
         } catch (error) {
-            console.error(`Ocurrio un error: ${error}`)
+            console.error(`Error al guardar el proyecto: ${error}`)
             return null
         }
     }
 
-    const deleteProject = async (id: string): Promise<void> => {
+    const deleteProject = async (
+        id: string,
+    ): Promise<ProjectResponse | null> => {
         try {
-            const response = await fetch(`/api/projects/${id}`, {
+            const response = await fetch(`${API}/${id}`, {
                 method: "DELETE",
             })
 
             if (!response.ok) {
-                throw new Error(`Error HTTP: ${response.status}`)
+                const errorData = await response.json()
+                console.error(`Error: ${errorData.message}`)
+                return null
             }
 
-            const json = response.json()
-
-            resetProjects()
-            await getProjects()
+            const json: ProjectResponse = await response.json()
 
             return json
         } catch (error) {
-            console.error(error)
+            console.error(`Error al eliminar el proyecto: ${error}`)
+            return null
         }
     }
 
@@ -110,7 +109,7 @@ export const useStoreProject = defineStore("project", () => {
         if (!id) return null
 
         try {
-            const response = await fetch(`/api/projects/${id}`, {
+            const response = await fetch(`${API}/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -120,20 +119,15 @@ export const useStoreProject = defineStore("project", () => {
 
             if (!response.ok) {
                 const errorData = await response.json()
-                console.error(
-                    `Error en la creacion del proyecto: ${errorData.message}`,
-                )
+                console.error(`Error: ${errorData.message}`)
                 return null
             }
 
             const json: ProjectResponse = await response.json()
 
-            resetProjects()
-            await getProjects()
-
             return json
         } catch (error) {
-            console.error(error)
+            console.error(`Error al actualizar el proyecto: ${error}`)
             return null
         }
     }

@@ -30,14 +30,16 @@ class ProjectController extends Controller
     {
         try {
             $project = Project::create($request->validated());
+
             return response()->json([
                 "project" => $project,
-                "message" => "Proyecto guardado exitosamente.",
+                "message" => "¡Proyecto guardado exitosamente!",
             ], 201);
         } catch (Exception $e) {
             Log::error("Error: " . $e->getMessage());
+            
             return response()->json([
-                "message" => "Ocurrio un error al guardar el proyecto.",
+                "message" => "¡Error al guardar el proyecto!",
                 "error" => $e->getMessage()
             ], 422);
         }
@@ -51,16 +53,21 @@ class ProjectController extends Controller
     public function show(string $id): JsonResponse
     {
         try {
-            $project = Project::find($id);
-            
+            $project = Project::findOrFail($id);
+
             return response()->json([
                 "project" => $project,
-                "status" => true
+                "message" => ""
             ], 200);
+        } catch(ModelNotFoundException $e) {
+            return response()->json(["message" => "¡Proyecto no encontrado!"], 404);
         } catch (Exception $e) {
+            Log::error("Error: " . $e->getMessage());
+
             return response()->json([
-                "status" => false
-            ], 404);
+                "message" => "¡Error al obtener el proyecto!",
+                "error" => $e->getMessage()
+            ], 422);
         }
     }
 
@@ -78,14 +85,15 @@ class ProjectController extends Controller
 
             return response()->json([
                 "project" => $project,
-                "message" => "Proyecto actualizado correctamente."
+                "message" => "¡Proyecto actualizado exitosamente!"
             ], 200);
         } catch(ModelNotFoundException $e) {
-            return response()->json(["message" => "Proyecto no encontrado."], 404);
+            return response()->json(["message" => "¡Proyecto no encontrado!"], 404);
         } catch (Exception $e) {
             Log::error("Error: " . $e->getMessage());
+
             return response()->json([
-                "message" => "Error al actualizar el proyecto.",
+                "message" => "¡Error al actualizar el proyecto!",
                 "error" => $e->getMessage()
             ], 422);
         }
@@ -99,16 +107,20 @@ class ProjectController extends Controller
     public function destroy(string $id): JsonResponse
     {
         try {
-            $project = Project::find($id);
+            $project = Project::findOrFail($id);
             $project->delete();
 
             return response()->json([
-                "message" => "Registro eliminado exitosamente.",
+                "message" => "¡Proyecto eliminado exitosamente!",
             ], 200);
+        } catch(ModelNotFoundException $e) {
+            return response()->json(["message" => "¡Proyecto no encontrado!"], 404);
         } catch(Exception $e) {
             Log::error("Error: " . $e->getMessage());
+
             return response()->json([
-                "message" => "Error al eliminar el proyecto.",
+                "message" => "¡Error al eliminar el proyecto!",
+                "error" => $e->getMessage()
             ], 422);
         }
     }

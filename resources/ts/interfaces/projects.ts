@@ -6,6 +6,7 @@ interface Project {
 }
 
 interface ProjectResponse {
+    projects?: Project[]
     project?: Project
     message: string
     error?: string

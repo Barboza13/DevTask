@@ -49,6 +49,9 @@
                     }
 
                     setTimeout(() => (message.value = ""), 3000)
+
+                    store.resetProjects()
+                    store.getProjects()
                 })
                 .catch((error) => {
                     console.error(error)
@@ -66,6 +69,9 @@
                     name.value = ""
                     deadline.value = ""
                     description.value = ""
+
+                    store.resetProjects()
+                    store.getProjects()
                 })
                 .catch((error) => {
                     console.log(error)
@@ -87,7 +93,8 @@
                 @click="closeForm"
             />
         </div>
-        <h1 class="text-3xl mb-8">Nuevo proyecto</h1>
+        <h1 v-if="props.isUpdate" class="text-3xl mb-8">Editar proyecto</h1>
+        <h1 v-else="props.isUpdate" class="text-3xl mb-8">Nuevo proyecto</h1>
 
         <p v-if="message" class="text-white">
             {{ message }}

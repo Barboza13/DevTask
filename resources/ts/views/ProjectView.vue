@@ -1,7 +1,7 @@
 <script lang="ts" setup>
     import { ref, Ref, onMounted, onUnmounted } from "vue"
     import MainLayout from "@layouts/MainLayout.vue"
-    import CreateProjectForm from "@components/CreateProjectForm.vue"
+    import ProjectForm from "@/components/ProjectForm.vue"
     import ShowComponent from "@transitions/ShowComponent.vue"
     import { useStoreProject } from "@store/storeProject"
 
@@ -29,13 +29,9 @@
 
     const hideForm = (): boolean => (isFormVisible.value = false)
 
-    onMounted(async () => {
-        await store.getProjects()
-    })
+    onMounted(async () => await store.getProjects())
 
-    onUnmounted(() => {
-        store.resetProjects()
-    })
+    onUnmounted(() => store.resetProjects())
 
     const handleProjectCardClick = (id: string): void => {
         showProjectCard()
@@ -43,8 +39,8 @@
         store
             .getProject(id)
             .then((data) => {
-                if (data) {
-                    project.value = data
+                if (data && data.project) {
+                    project.value = data.project
                 }
             })
             .catch((error) => {
@@ -56,14 +52,21 @@
         store
             .deleteProject(id)
             .then((data) => {
+                if (data) {
+                    alert(data.message)
+                }
+
                 hideProjectCard()
+                store.resetProjects()
+                store.getProjects()
             })
             .catch((error) => {
                 console.log(error)
             })
     }
 
-    const handleEditProject = (currentProject: Project): void => {
+    const handleEditProject = (): void => {
+        hideProjectCard()
         showForm(true)
     }
 </script>
@@ -80,7 +83,7 @@
                             Proyectos existentes
                         </h1>
                         <button
-                            class="bg-green-600 hover:bg-green-700 text-white rounded-md p-2"
+                            class="flex justify-center bg-green-600 hover:bg-green-700 text-white rounded-md p-2 gap-1"
                             @click="showForm(false)"
                         >
                             Nuevo registro
@@ -95,7 +98,7 @@
                         v-for="project in store.projects"
                         :key="project.id"
                         @click="handleProjectCardClick(project.id ?? '')"
-                        class="flex justify-center items-center w-32 h-32 bg-primary text-white rounded-xl cursor-pointer hover:scale-105 duration-300 mt-2"
+                        class="flex justify-center items-center w-32 h-32 bg-primary text-white rounded-lg cursor-pointer hover:scale-105 duration-300 mt-2"
                     >
                         <h1 class="flex flex-col justify-center items-center">
                             <v-icon name="fa-file-code" scale="3" />
@@ -116,7 +119,7 @@
                         <div class="flex gap-2">
                             <button
                                 class="w-[40px] h-[40px] bg-blue-500 hover:bg-blue-600 rounded-sm"
-                                @click="handleEditProject(project)"
+                                @click="handleEditProject"
                             >
                                 <v-icon name="md-modeeditoutline" scale="1.5" />
                             </button>
@@ -143,7 +146,7 @@
             </ShowComponent>
 
             <ShowComponent>
-                <CreateProjectForm
+                <ProjectForm
                     v-if="isFormVisible"
                     :isUpdate="isUpdate"
                     :project="project"
