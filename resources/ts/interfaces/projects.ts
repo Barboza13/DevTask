@@ -1,3 +1,4 @@
+//Projects types.
 interface Project {
     id?: string
     name: string
@@ -12,4 +13,19 @@ interface ProjectResponse {
     error?: string
 }
 
-export { Project, ProjectResponse }
+//Members types.
+interface Member {
+    id?: string
+    name: string
+    last_name: string
+    email: string
+}
+
+interface MemberResponse {
+    members?: Member[]
+    member?: Member
+    message: string
+    error?: string
+}
+
+export { Project, ProjectResponse, Member, MemberResponse }

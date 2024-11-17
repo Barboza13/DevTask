@@ -20,6 +20,7 @@ export default defineConfig({
             "@layouts": path.resolve(__dirname, "resources/ts/layouts"),
             "@store": path.resolve(__dirname, "resources/ts/store"),
             "@transitions": path.resolve(__dirname, "resources/ts/transitions"),
+            "@services": path.resolve(__dirname, "resources/ts/services"),
         },
     },
 })
