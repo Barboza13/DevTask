@@ -1,6 +1,6 @@
 <script lang="ts" setup>
     import { Ref, ref, PropType } from "vue"
-    import { useStoreProject } from "@store/storeProject"
+    import ProjectService from "@services/ProjectService"
 
     import type { Project } from "@interfaces/projects"
 
@@ -15,9 +15,9 @@
         },
     })
 
-    const emit = defineEmits(["close"])
+    const emit = defineEmits(["close", "resetProjects"])
 
-    const store = useStoreProject()
+    const service = new ProjectService()
     const name: Ref<string> = ref("")
     const description: Ref<string> = ref("")
     const deadline: Ref<string> = ref("")
@@ -41,7 +41,7 @@
         }
 
         if (props.isUpdate) {
-            store
+            service
                 .updateProject(project, props.project?.id ?? "")
                 .then((data) => {
                     if (data) {
@@ -50,14 +50,13 @@
 
                     setTimeout(() => (message.value = ""), 3000)
 
-                    store.resetProjects()
-                    store.getProjects()
+                    emit("resetProjects")
                 })
                 .catch((error) => {
                     console.error(error)
                 })
         } else {
-            store
+            service
                 .saveProject(project)
                 .then((data) => {
                     if (data) {
@@ -70,8 +69,7 @@
                     deadline.value = ""
                     description.value = ""
 
-                    store.resetProjects()
-                    store.getProjects()
+                    emit("resetProjects")
                 })
                 .catch((error) => {
                     console.log(error)

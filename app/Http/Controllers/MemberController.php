@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MemberRequest;
 use App\Models\Member;
+use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class MemberController extends Controller
 {
@@ -19,50 +22,104 @@ class MemberController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Save member.
+     * @param \App\Http\Requests\MemberRequest $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function create()
+    public function store(MemberRequest $request): JsonResponse
     {
-        //
+        try {
+            $member = Member::create($request->validated());
+
+            return response()->json([
+                "member" => $member,
+                "message" => "¡Miembro guardado exitosamente!"
+            ], 201);
+        } catch (Exception $e) {
+            Log::error("Error: " . $e->getMessage());
+
+            return response()->json([
+                "message" => "¡Error al guardar el miembro!",
+                "error" => $e->getMessage()
+            ], 422);
+        }
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Show member.
+     * @param string $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function show(string $id): JsonResponse
     {
-        //
+        try {
+            $member = Member::findOrFail($id);
+
+            return response()->json([
+                "member" => $member,
+                "message" => ""
+            ], 200);
+        } catch(ModelNotFoundException $e) {
+            return response()->json(["message" => "¡Miembro no encontrado!"], 404);
+        } catch (Exception $e) {
+            Log::error("Error: " . $e->getMessage());
+
+            return response()->json([
+                "message" => "¡Error al obtener el miembro!",
+                "error" => $e->getMessage()
+            ], 422);
+        }
     }
 
     /**
-     * Display the specified resource.
+     * Update member.
+     * @param \App\Http\Requests\MemberRequest $request
+     * @param string $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show(string $id)
+    public function update(MemberRequest $request, string $id): JsonResponse
     {
-        //
+        try {
+            $member = Member::findOrFail($id);
+            $member->update($request->validated());
+
+            return response()->json([
+                "member" => $member,
+                "message" => "¡Miembro actualizado exitosamente!"
+            ], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(["message" => "¡Miembro no encontrado!"], 404);
+        } catch (Exception $e) {
+            Log::error("Error: " . $e->getMessage());
+
+            return response()->json([
+                "message" => "¡Error al actualizar el miembro!",
+                "error" => $e->getMessage()
+            ], 422);
+        }
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Delete member.
+     * @param string $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function edit(string $id)
+    public function destroy(string $id): JsonResponse
     {
-        //
-    }
+        try {
+            $member = Member::findOrFail($id);
+            $member->delete();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+            return response()->json(["message" => "¡Miembro eliminado exitosamente!"], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(["message" => "¡Miembro no encontrado!", 404]);
+        } catch(Exception $e) {
+            Log::error("Error: " . $e->getMessage());
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+            return response()->json([
+                "message" => "¡Error al eliminar el miembro!",
+                "error" => $e->getMessage()
+            ], 422);
+        }
     }
 }

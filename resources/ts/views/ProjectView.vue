@@ -3,12 +3,12 @@
     import MainLayout from "@layouts/MainLayout.vue"
     import ProjectForm from "@/components/ProjectForm.vue"
     import ShowComponent from "@transitions/ShowComponent.vue"
-    import { useStoreProject } from "@store/storeProject"
+    import ProjectService from "@services/ProjectService"
 
     import type { Project } from "@interfaces/projects"
 
-    const store = useStoreProject()
-
+    const service = new ProjectService()
+    const projects: Ref<Project[]> = ref([])
     const isFormVisible: Ref<boolean> = ref(false)
     const isUpdate: Ref<boolean> = ref(false)
     const isProjectCardVisible: Ref<boolean> = ref(false)
@@ -19,6 +19,19 @@
         description: "",
     })
 
+    const resetProjects = async (): Promise<void> => {
+        service.clearProjects()
+        await service.fetchProjects()
+        projects.value = service.getProjects()
+    }
+
+    onMounted(async () => {
+        await service.fetchProjects()
+        projects.value = service.getProjects()
+    })
+
+    onUnmounted(() => service.clearProjects())
+
     const showProjectCard = (): boolean => (isProjectCardVisible.value = true)
     const hideProjectCard = (): boolean => (isProjectCardVisible.value = false)
 
@@ -26,39 +39,30 @@
         isUpdate.value = isEdit
         isFormVisible.value = true
     }
-
     const hideForm = (): boolean => (isFormVisible.value = false)
 
-    onMounted(async () => await store.getProjects())
-
-    onUnmounted(() => store.resetProjects())
-
     const handleProjectCardClick = (id: string): void => {
-        showProjectCard()
+        const projectData: Project | undefined = service.getProjectById(id)
 
-        store
-            .getProject(id)
-            .then((data) => {
-                if (data && data.project) {
-                    project.value = data.project
-                }
-            })
-            .catch((error) => {
-                console.error(error)
-            })
+        if (!projectData) {
+            alert("¡Proyecto no encontrado!")
+            return
+        }
+
+        project.value = projectData
+        showProjectCard()
     }
 
     const handleDeleteProject = (id: string): void => {
-        store
+        service
             .deleteProject(id)
-            .then((data) => {
+            .then(async (data) => {
                 if (data) {
                     alert(data.message)
                 }
 
+                resetProjects()
                 hideProjectCard()
-                store.resetProjects()
-                store.getProjects()
             })
             .catch((error) => {
                 console.log(error)
@@ -95,7 +99,7 @@
                     class="grid grid-cols-7 place-content-start w-full h-full overflow-y-auto gap-2 px-4"
                 >
                     <div
-                        v-for="project in store.projects"
+                        v-for="project in projects"
                         :key="project.id"
                         @click="handleProjectCardClick(project.id ?? '')"
                         class="flex justify-center items-center w-32 h-32 bg-primary text-white rounded-lg cursor-pointer hover:scale-105 duration-300 mt-2"
@@ -151,6 +155,7 @@
                     :isUpdate="isUpdate"
                     :project="project"
                     @close="hideForm"
+                    @resetProjects="resetProjects"
                 />
             </ShowComponent>
         </template>
