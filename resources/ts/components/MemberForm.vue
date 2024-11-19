@@ -1,5 +1,7 @@
 <script lang="ts" setup>
     import { Ref, ref, PropType } from "vue"
+    import MemberService from "@services/MemberService"
+
     import type { Member } from "@interfaces/projects.ts"
 
     const props = defineProps({
@@ -13,14 +15,59 @@
         },
     })
 
-    const emit = defineEmits(["close"])
+    const emit = defineEmits(["close", "resetMembers"])
 
+    const service = new MemberService()
     const name: Ref<string> = ref("")
     const last_name: Ref<string> = ref("")
     const email: Ref<string> = ref("")
     const message: Ref<string> = ref("")
 
-    const handleSubmit = (): void => {}
+    const handleSubmit = (event: Event): void => {
+        event.preventDefault()
+
+        const member: Member = {
+            name: name.value,
+            last_name: last_name.value,
+            email: email.value,
+        }
+
+        if (props.isUpdate) {
+            service
+                .updateMember(member, props.member?.id ?? "")
+                .then((data) => {
+                    if (data) {
+                        message.value = data.message
+                    }
+
+                    setTimeout(() => (message.value = ""), 3000)
+
+                    emit("resetMembers")
+                })
+                .catch((error) => {
+                    console.error(error)
+                })
+        } else {
+            service
+                .saveMember(member)
+                .then(async (data) => {
+                    if (data) {
+                        message.value = data.message
+                    }
+
+                    setTimeout(() => (message.value = ""), 3000)
+
+                    name.value = ""
+                    last_name.value = ""
+                    email.value = ""
+
+                    emit("resetMembers")
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+        }
+    }
 </script>
 
 <template>

@@ -1,4 +1,3 @@
-import { Ref, ref } from "vue"
 import { Member, MemberResponse } from "@/interfaces/projects"
 
 class MemberService {
@@ -10,6 +9,10 @@ class MemberService {
 
     getMembers(): Member[] {
         return this.members
+    }
+
+    clearMembers(): void {
+        this.members = []
     }
 
     async fetchMembers(): Promise<void> {
@@ -33,8 +36,59 @@ class MemberService {
         }
     }
 
-    resetMembers(): void {
-        this.members = []
+    async saveMember(member: Member): Promise<MemberResponse | null> {
+        try {
+            const response = await fetch("/api/members", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(member),
+            })
+
+            if (!response.ok) {
+                const errorData = await response.json()
+                console.error(`Error: ${errorData.message}`)
+                return null
+            }
+
+            const json: MemberResponse = await response.json()
+
+            return json
+        } catch (error) {
+            console.error(`Error al guardar el miembro: ${error}`)
+            return null
+        }
+    }
+
+    async updateMember(
+        member: Member,
+        id: string,
+    ): Promise<MemberResponse | null> {
+        if (!id) return null
+
+        try {
+            const response = await fetch(`/api/members/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(member),
+            })
+
+            if (!response.ok) {
+                const errorData = await response.json()
+                console.error(`Error: ${errorData.message}`)
+                return null
+            }
+
+            const json: MemberResponse = await response.json()
+
+            return json
+        } catch (error) {
+            console.error(`Error al actualizar el miembro: ${error}`)
+            return null
+        }
     }
 }
 

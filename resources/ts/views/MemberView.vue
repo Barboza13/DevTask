@@ -8,6 +8,7 @@
     import type { Member } from "@interfaces/projects.ts"
 
     const service = new MemberService()
+    const members: Ref<Member[]> = ref([])
     const isFormVisible: Ref<boolean> = ref(false)
     const isUpdate: Ref<boolean> = ref(false)
     const isMemberCardVisible: Ref<boolean> = ref(false)
@@ -18,8 +19,18 @@
         email: "",
     })
 
-    onMounted(async (): Promise<void> => await service.fetchMembers())
-    onUnmounted((): void => service.resetMembers())
+    onMounted(async (): Promise<void> => {
+        await service.fetchMembers()
+        members.value = service.getMembers()
+    })
+
+    onUnmounted((): void => service.clearMembers())
+
+    const resetMembers = async (): Promise<void> => {
+        service.clearMembers()
+        await service.fetchMembers()
+        members.value = service.getMembers()
+    }
 
     const showMemberCard = (): boolean => (isMemberCardVisible.value = true)
     const hideMemberCard = (): boolean => (isMemberCardVisible.value = false)
@@ -60,7 +71,7 @@
                     class="grid grid-cols-7 place-content-start w-full h-full overflow-y-auto gap-2 px-4"
                 >
                     <div
-                        v-for="member in service.getMembers()"
+                        v-for="member in members"
                         :key="member.id"
                         @click="handleMemberCardClick(member.id ?? '')"
                         class="flex justify-center items-center w-32 h-32 bg-primary text-white rounded-lg cursor-pointer hover:scale-105 duration-300 mt-2"
@@ -116,6 +127,7 @@
                     :isUpdate="isUpdate"
                     :member="member"
                     @close="hideForm"
+                    @resetMembers="resetMembers"
                 />
             </ShowComponent>
         </template>
