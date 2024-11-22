@@ -42,16 +42,45 @@
 
     const hideForm = (): boolean => (isFormVisible.value = false)
 
-    const handleMemberCardClick = (id: string): void => {}
-    const handleDeleteMember = (id: string): void => {}
-    const handleEditMember = (): void => {}
+    const handleMemberCardClick = (id: string): void => {
+        const memberData: Member | undefined = service.getMemberById(id)
+
+        if (!memberData) {
+            alert("¡Proyecto no encontrado!")
+            return
+        }
+
+        member.value = memberData
+        showMemberCard()
+    }
+
+    const handleDeleteMember = (id: string): void => {
+        service
+            .deleteMember(id)
+            .then(async (data) => {
+                if (data) {
+                    alert(data.message)
+                }
+
+                resetMembers()
+                hideMemberCard()
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+
+    const handleEditMember = (): void => {
+        hideMemberCard()
+        showForm(true)
+    }
 </script>
 
 <template>
     <MainLayout>
         <template v-slot:main>
             <section
-                class="flex flex-col bg-gray-200 w-[1200px] h-[590px] rounded-xl p-2"
+                class="flex flex-col bg-gray-200 w-[1200px] h-[500px] rounded-xl p-2"
             >
                 <div class="border-b-[1px] border-b-secondary h-[60px] w-full">
                     <div class="flex h-full justify-around items-center">
@@ -87,7 +116,7 @@
             <ShowComponent>
                 <div
                     v-if="isMemberCardVisible"
-                    class="flex flex-col justify-start items-center absolute bg-primary w-[600px] h-[600px] text-white rounded-md z-[1000]"
+                    class="flex flex-col justify-start items-center absolute bg-primary w-[500px] h-[500px] text-white rounded-md z-[1000]"
                 >
                     <div
                         class="flex justify-between w-full h-14 border-b-2 border-gray-200 p-2"

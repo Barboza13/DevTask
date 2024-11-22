@@ -11,6 +11,10 @@ class MemberService {
         return this.members
     }
 
+    getMemberById(id: string): Member | undefined {
+        return this.members.find((member) => member.id == id)
+    }
+
     clearMembers(): void {
         this.members = []
     }
@@ -87,6 +91,27 @@ class MemberService {
             return json
         } catch (error) {
             console.error(`Error al actualizar el miembro: ${error}`)
+            return null
+        }
+    }
+
+    async deleteMember(id: string): Promise<MemberResponse | null> {
+        try {
+            const response = await fetch(`/api/members/${id}`, {
+                method: "DELETE",
+            })
+
+            if (!response.ok) {
+                const errorData = await response.json()
+                console.error(`Error: ${errorData.message}`)
+                return null
+            }
+
+            const json: MemberResponse = await response.json()
+
+            return json
+        } catch (error) {
+            console.error(`Error al eliminar el miembro: ${error}`)
             return null
         }
     }

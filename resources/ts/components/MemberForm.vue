@@ -23,6 +23,12 @@
     const email: Ref<string> = ref("")
     const message: Ref<string> = ref("")
 
+    if (props.isUpdate) {
+        name.value = props.member?.name ?? ""
+        last_name.value = props.member?.last_name ?? ""
+        email.value = props.member?.email ?? ""
+    }
+
     const handleSubmit = (event: Event): void => {
         event.preventDefault()
 
@@ -72,7 +78,7 @@
 
 <template>
     <form
-        class="flex flex-col justify-start items-center absolute bg-primary w-[600px] h-[600px] text-white rounded-md z-[1000]"
+        class="flex flex-col justify-start items-center absolute bg-primary w-[500px] h-[500px] text-white rounded-md z-[1000]"
         @submit="handleSubmit"
     >
         <div class="flex justify-end w-full p-2">

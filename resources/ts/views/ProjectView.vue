@@ -79,7 +79,7 @@
     <MainLayout>
         <template v-slot:main>
             <section
-                class="flex flex-col bg-gray-200 w-[1200px] h-[590px] rounded-xl p-2"
+                class="flex flex-col bg-gray-200 w-[1200px] h-[500px] rounded-xl p-2"
             >
                 <div class="border-b-[1px] border-b-secondary h-[60px] w-full">
                     <div class="flex h-full justify-around items-center">
@@ -115,7 +115,7 @@
             <ShowComponent>
                 <div
                     v-if="isProjectCardVisible"
-                    class="flex flex-col justify-start items-center absolute bg-primary w-[600px] h-[600px] text-white rounded-md z-[1000]"
+                    class="flex flex-col justify-start items-center absolute bg-primary w-[500px] h-[500px] text-white rounded-md z-[1000]"
                 >
                     <div
                         class="flex justify-between w-full h-14 border-b-2 border-gray-200 p-2"
