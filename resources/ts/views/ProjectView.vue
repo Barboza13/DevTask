@@ -1,7 +1,8 @@
 <script lang="ts" setup>
     import { ref, Ref, onMounted, onUnmounted } from "vue"
     import MainLayout from "@layouts/MainLayout.vue"
-    import ProjectForm from "@/components/ProjectForm.vue"
+    import ProjectForm from "@components/ProjectForm.vue"
+    import TaskForm from "@components/TaskForm.vue"
     import ShowComponent from "@transitions/ShowComponent.vue"
     import ProjectService from "@services/ProjectService"
 
@@ -9,7 +10,8 @@
 
     const service = new ProjectService()
     const projects: Ref<Project[]> = ref([])
-    const isFormVisible: Ref<boolean> = ref(false)
+    const isProjectFormVisible: Ref<boolean> = ref(false)
+    const isTaskFormVisible: Ref<boolean> = ref(false)
     const isUpdate: Ref<boolean> = ref(false)
     const isProjectCardVisible: Ref<boolean> = ref(false)
     const project: Ref<Project> = ref({
@@ -35,11 +37,17 @@
     const showProjectCard = (): boolean => (isProjectCardVisible.value = true)
     const hideProjectCard = (): boolean => (isProjectCardVisible.value = false)
 
-    const showForm = (isEdit: boolean): void => {
+    const showProjectForm = (isEdit: boolean): void => {
         isUpdate.value = isEdit
-        isFormVisible.value = true
+        isProjectFormVisible.value = true
     }
-    const hideForm = (): boolean => (isFormVisible.value = false)
+    const hideProjectForm = (): boolean => (isProjectFormVisible.value = false)
+
+    const showTaskForm = (isEdit: boolean): void => {
+        isUpdate.value = isEdit
+        isTaskFormVisible.value = true
+    }
+    const hideTaskForm = (): boolean => (isTaskFormVisible.value = false)
 
     const handleProjectCardClick = (id: string): void => {
         const projectData: Project | undefined = service.getProjectById(id)
@@ -71,7 +79,7 @@
 
     const handleEditProject = (): void => {
         hideProjectCard()
-        showForm(true)
+        showProjectForm(true)
     }
 </script>
 
@@ -88,7 +96,7 @@
                         </h1>
                         <button
                             class="flex justify-center bg-green-600 hover:bg-green-700 text-white rounded-md p-2 gap-1"
-                            @click="showForm(false)"
+                            @click="showProjectForm(false)"
                         >
                             Nuevo registro
                             <v-icon name="co-plus" scale="1.2" />
@@ -115,7 +123,7 @@
             <ShowComponent>
                 <div
                     v-if="isProjectCardVisible"
-                    class="flex flex-col justify-start items-center absolute bg-primary w-[500px] h-[500px] text-white rounded-md z-[1000]"
+                    class="flex flex-col justify-start items-center absolute bg-primary w-[500px] h-[300px] text-white rounded-md z-[1000]"
                 >
                     <div
                         class="flex justify-between w-full h-14 border-b-2 border-gray-200 p-2"
@@ -132,6 +140,13 @@
                                 @click="handleDeleteProject(project.id ?? '')"
                             >
                                 <v-icon name="fa-trash" scale="1.5" />
+                            </button>
+                            <button
+                                class="w-36 h-[40px] bg-green-600 hover:bg-green-700 rounded-sm"
+                                @click="showTaskForm(false)"
+                            >
+                                Nueva Tarea
+                                <v-icon name="co-plus" scale="1.2" />
                             </button>
                         </div>
 
@@ -151,11 +166,19 @@
 
             <ShowComponent>
                 <ProjectForm
-                    v-if="isFormVisible"
+                    v-if="isProjectFormVisible"
                     :isUpdate="isUpdate"
                     :project="project"
-                    @close="hideForm"
+                    @close="hideProjectForm"
                     @resetProjects="resetProjects"
+                />
+            </ShowComponent>
+
+            <ShowComponent>
+                <TaskForm
+                    v-if="isTaskFormVisible"
+                    :isUpdate="isUpdate"
+                    @close="hideTaskForm"
                 />
             </ShowComponent>
         </template>

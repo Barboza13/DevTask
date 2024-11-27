@@ -97,18 +97,18 @@
                     </div>
                 </div>
                 <div
-                    class="grid grid-cols-7 place-content-start w-full h-full overflow-y-auto gap-2 px-4"
+                    class="flex flex-col justify-start items-center w-full h-full overflow-y-auto gap-2 px-2 pt-2"
                 >
                     <div
                         v-for="member in members"
                         :key="member.id"
                         @click="handleMemberCardClick(member.id ?? '')"
-                        class="flex justify-center items-center w-32 h-32 bg-primary text-white rounded-lg cursor-pointer hover:scale-105 duration-300 mt-2"
+                        class="flex justify-start items-center w-full h-10 bg-primary text-white rounded-full cursor-pointer hover:scale-[1.01] duration-75 mt-[.5px]"
                     >
-                        <h1 class="flex flex-col justify-center items-center">
-                            <v-icon name="fa-file-code" scale="3" />
-                            {{ member.name }}
-                        </h1>
+                        <div class="flex justify-center items-center pl-4">
+                            <v-icon name="io-person" scale="1" />
+                            <h1 class="text-xl pl-2">{{ member.name }}</h1>
+                        </div>
                     </div>
                 </div>
             </section>
