@@ -1,5 +1,8 @@
 <script lang="ts" setup>
-    import { Ref, ref, PropType } from "vue"
+    import TaskService from "@services/TaskService"
+    import { Ref, ref, PropType, onMounted } from "vue"
+
+    import type { Task, TaskResponse } from "@interfaces/interfaces"
 
     const props = defineProps({
         isUpdate: {
@@ -10,59 +13,73 @@
 
     const emit = defineEmits(["close"])
 
+    const service = new TaskService()
     const title: Ref<string> = ref("")
     const description: Ref<string> = ref("")
     const deadline: Ref<string> = ref("")
     const status: Ref<boolean> = ref(false)
     const message: Ref<string> = ref("")
+    const task: Ref<Task> = ref({
+        id: "",
+        project_id: "",
+        member_id: "",
+        title: "",
+        description: "",
+        deadline: "",
+        status: false,
+    })
+
+    onMounted(() => {
+        service.fetchTasks
+    })
 
     const closeForm = (): void => emit("close")
 
-    const handleSubmit = (event: Event): void => {
-        event.preventDefault()
+    // const handleSubmit = (event: Event): void => {
+    //     event.preventDefault()
 
-        const project: Project = {
-            name: name.value,
-            deadline: deadline.value,
-            description: description.value,
-        }
+    //     const project: Project = {
+    //         name: name.value,
+    //         deadline: deadline.value,
+    //         description: description.value,
+    //     }
 
-        if (props.isUpdate) {
-            service
-                .updateProject(project, props.project?.id ?? "")
-                .then((data) => {
-                    if (data) {
-                        message.value = data.message
-                    }
+    //     if (props.isUpdate) {
+    //         service
+    //             .updateProject(project, props.project?.id ?? "")
+    //             .then((data) => {
+    //                 if (data) {
+    //                     message.value = data.message
+    //                 }
 
-                    setTimeout(() => (message.value = ""), 3000)
+    //                 setTimeout(() => (message.value = ""), 3000)
 
-                    emit("resetProjects")
-                })
-                .catch((error) => {
-                    console.error(error)
-                })
-        } else {
-            service
-                .saveProject(project)
-                .then((data) => {
-                    if (data) {
-                        message.value = data.message
-                    }
+    //                 emit("resetProjects")
+    //             })
+    //             .catch((error) => {
+    //                 console.error(error)
+    //             })
+    //     } else {
+    //         service
+    //             .saveProject(project)
+    //             .then((data) => {
+    //                 if (data) {
+    //                     message.value = data.message
+    //                 }
 
-                    setTimeout(() => (message.value = ""), 3000)
+    //                 setTimeout(() => (message.value = ""), 3000)
 
-                    name.value = ""
-                    deadline.value = ""
-                    description.value = ""
+    //                 name.value = ""
+    //                 deadline.value = ""
+    //                 description.value = ""
 
-                    emit("resetProjects")
-                })
-                .catch((error) => {
-                    console.log(error)
-                })
-        }
-    }
+    //                 emit("resetProjects")
+    //             })
+    //             .catch((error) => {
+    //                 console.log(error)
+    //             })
+    //     }
+    // }
 </script>
 
 <template>
@@ -119,6 +136,13 @@
                 id="deadline"
                 required
             />
+        </div>
+
+        <div class="flex flex-col w-[90%] mb-6">
+            <label class="mb-2" for="deadline">Miembro</label>
+            <select name="member_id" id="member_id">
+                <option v-for="" value=""></option>
+            </select>
         </div>
 
         <div v-if="props.isUpdate" class="flex flex-col w-[90%] mb-6">

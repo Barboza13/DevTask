@@ -10,3 +10,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::apiResource("projects", ProjectController::class);
 Route::apiResource("members", MemberController::class);
+Route::get("api/members-names", [MemberController::class, "getNames"]);

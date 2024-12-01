@@ -6,7 +6,7 @@
     import ShowComponent from "@transitions/ShowComponent.vue"
     import ProjectService from "@services/ProjectService"
 
-    import type { Project } from "@interfaces/projects"
+    import type { Project } from "@/interfaces/interfaces"
 
     const service = new ProjectService()
     const projects: Ref<Project[]> = ref([])

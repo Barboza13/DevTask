@@ -2,7 +2,7 @@
     import { Ref, ref, PropType } from "vue"
     import ProjectService from "@services/ProjectService"
 
-    import type { Project } from "@interfaces/projects"
+    import type { Project } from "@/interfaces/interfaces"
 
     const props = defineProps({
         isUpdate: {

@@ -1,4 +1,4 @@
-import type { Project, ProjectResponse } from "@interfaces/projects.ts"
+import type { Project, ProjectResponse } from "@/interfaces/interfaces"
 
 class ProjectService {
     private projects: Project[]

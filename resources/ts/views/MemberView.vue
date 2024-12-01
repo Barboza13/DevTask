@@ -5,7 +5,7 @@
     import ShowComponent from "@transitions/ShowComponent.vue"
     import MemberService from "@services/MemberService"
 
-    import type { Member } from "@interfaces/projects.ts"
+    import type { Member } from "@/interfaces/interfaces"
 
     const service = new MemberService()
     const members: Ref<Member[]> = ref([])

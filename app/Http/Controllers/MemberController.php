@@ -22,6 +22,16 @@ class MemberController extends Controller
     }
 
     /**
+     * Get members names.
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getNames(): JsonResponse
+    {
+        $names = Member::select("id", "name")->get();
+        return response()->json(["members" => $names], 200);
+    }
+
+    /**
      * Save member.
      * @param \App\Http\Requests\MemberRequest $request
      * @return \Illuminate\Http\JsonResponse

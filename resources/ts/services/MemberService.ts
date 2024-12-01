@@ -1,4 +1,4 @@
-import { Member, MemberResponse } from "@/interfaces/projects"
+import { Member, MemberResponse } from "@/interfaces/interfaces"
 
 class MemberService {
     private members: Member[]
