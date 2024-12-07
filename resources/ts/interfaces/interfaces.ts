@@ -40,9 +40,9 @@ interface Task {
 }
 
 interface TaskResponse {
-    tasks: Task[]
-    task: Task
-    message?: string
+    tasks?: Task[]
+    task?: Task
+    message: string
     error?: string
 }
 

@@ -178,6 +178,7 @@
                 <TaskForm
                     v-if="isTaskFormVisible"
                     :isUpdate="isUpdate"
+                    :project_id="project.id ?? ''"
                     @close="hideTaskForm"
                 />
             </ShowComponent>
