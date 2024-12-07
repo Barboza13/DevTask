@@ -46,8 +46,8 @@
             deadline: deadline.value,
             description: description.value,
             status: status.value,
-            project_id: props.project_id,
-            member_id: memberSelect.value,
+            project_id: props.project_id.toString(),
+            member_id: memberSelect.value.toString(),
         }
 
         if (props.isUpdate) {
@@ -64,6 +64,11 @@
             //         console.error(error)
             //     })
         } else {
+            if (props.project_id == "") {
+                alert("¡No se encontro el proyecto!")
+                return
+            }
+
             service
                 .saveTask(task)
                 .then((data) => {
@@ -77,8 +82,6 @@
                     deadline.value = ""
                     description.value = ""
                     memberSelect.value = ""
-
-                    // emit("resetProjects")
                 })
                 .catch((error) => {
                     console.log(error)
