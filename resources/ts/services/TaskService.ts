@@ -100,6 +100,54 @@ class TaskService {
             return null
         }
     }
+
+    async updateTask(task: Task, id: string): Promise<TaskResponse | null> {
+        if (!id) return null
+
+        try {
+            const response = await fetch(`/api/tasks/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(task),
+            })
+
+            if (!response.ok) {
+                const errorData = await response.json()
+                console.error(`Error: ${errorData.message}`)
+                return null
+            }
+
+            const json: TaskResponse = await response.json()
+
+            return json
+        } catch (error) {
+            console.error(`Error al actualizar la tarea: ${error}`)
+            return null
+        }
+    }
+
+    async deleteTask(id: string): Promise<TaskResponse | null> {
+        try {
+            const response = await fetch(`/api/tasks/${id}`, {
+                method: "DELETE",
+            })
+
+            if (!response.ok) {
+                const errorData = await response.json()
+                console.error(`Error: ${errorData.message}`)
+                return null
+            }
+
+            const json: TaskResponse = await response.json()
+
+            return json
+        } catch (error) {
+            console.error(`Error al eliminar la tarea: ${error}`)
+            return null
+        }
+    }
 }
 
 export default TaskService

@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-    import TaskService from "@services/TaskService"
     import { Ref, ref, PropType, onMounted } from "vue"
+    import TaskService from "@services/TaskService"
 
-    import type { Member, Task, TaskResponse } from "@interfaces/interfaces"
+    import type { Member, Task } from "@interfaces/interfaces"
 
     const props = defineProps({
         isUpdate: {
@@ -10,12 +10,16 @@
             required: false,
         },
         project_id: {
-            type: String,
+            type: Number,
             required: true,
+        },
+        task: {
+            type: Object as PropType<Task>,
+            required: false,
         },
     })
 
-    const emit = defineEmits(["close"])
+    const emit = defineEmits(["close", "resetTasks"])
 
     const service = new TaskService()
     const tasks: Ref<Task[]> = ref([])
@@ -27,6 +31,16 @@
     const status: Ref<boolean> = ref(false)
     const memberSelect: Ref<string> = ref("")
     const message: Ref<string> = ref("")
+
+    if (props.isUpdate) {
+        const boolean = props.task?.status === 1 ? true : false
+
+        title.value = props.task?.title ?? ""
+        description.value = props.task?.description ?? ""
+        deadline.value = props.task?.deadline ?? ""
+        status.value = boolean
+        memberSelect.value = props.task?.member_id ?? ""
+    }
 
     onMounted(async () => {
         await service.fetchTasks()
@@ -51,20 +65,21 @@
         }
 
         if (props.isUpdate) {
-            // service
-            //     .updateProject(project, props.project?.id ?? "")
-            //     .then((data) => {
-            //         if (data) {
-            //             message.value = data.message
-            //         }
-            //         setTimeout(() => (message.value = ""), 3000)
-            //         emit("resetProjects")
-            //     })
-            //     .catch((error) => {
-            //         console.error(error)
-            //     })
+            service
+                .updateTask(task, props.task?.id ?? "")
+                .then((data) => {
+                    if (data) {
+                        message.value = data.message
+                    }
+
+                    setTimeout(() => (message.value = ""), 3000)
+                    emit("resetTasks")
+                })
+                .catch((error) => {
+                    console.error(error)
+                })
         } else {
-            if (props.project_id == "") {
+            if (props.project_id.toString() == "") {
                 alert("¡No se encontro el proyecto!")
                 return
             }
@@ -151,7 +166,9 @@
 
             <div class="flex flex-col justify-center items-center w-1/2 h-full">
                 <div class="flex flex-col w-[90%] mb-6">
-                    <label class="mb-2" for="member_id">Miembro</label>
+                    <label class="mb-2" for="member_id">
+                        Miembro encargado
+                    </label>
                     <select
                         class="w-full h-10 bg-white text-black outline-none p-2 rounded-lg cursor-pointer"
                         v-model="memberSelect"
@@ -171,16 +188,19 @@
                     </select>
                 </div>
 
-                <div v-if="props.isUpdate" class="flex flex-col w-[90%] mb-6">
-                    <label class="mb-2" for="status">Estado</label>
+                <div
+                    v-if="props.isUpdate"
+                    class="flex items-center w-[90%] mb-6"
+                >
                     <input
-                        class="w-full h-10 bg-white text-black outline-none p-2 rounded-lg"
+                        class="w-5 h-5 cursor-pointer mr-2"
                         type="checkbox"
                         v-model="status"
                         name="status"
                         id="status"
                         required
                     />
+                    <label for="status">Marcar como completado.</label>
                 </div>
                 <input
                     v-else

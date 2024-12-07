@@ -36,7 +36,7 @@ interface Task {
     title: string
     description: string
     deadline: string
-    status: boolean
+    status: boolean | number
 }
 
 interface TaskResponse {
