@@ -40,6 +40,37 @@ class ProjectService {
         }
     }
 
+    async addMember(
+        project_id: string,
+        member_id: string,
+    ): Promise<string | null> {
+        try {
+            const response = await fetch(
+                `/api/projects/add-member/${project_id}`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(member_id),
+                },
+            )
+
+            if (!response.ok) {
+                const errorData = await response.json()
+                console.error(`Error: ${errorData.message}`)
+                return null
+            }
+
+            const json: string = await response.json()
+
+            return json
+        } catch (error) {
+            console.error(error)
+            return null
+        }
+    }
+
     async saveProject(project: Project): Promise<ProjectResponse | null> {
         try {
             const response = await fetch("/api/projects", {

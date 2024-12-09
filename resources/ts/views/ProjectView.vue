@@ -3,14 +3,16 @@
     import MainLayout from "@layouts/MainLayout.vue"
     import ProjectForm from "@components/ProjectForm.vue"
     import TaskForm from "@components/TaskForm.vue"
+    import AddMemberForm from "@components/AddMemberForm.vue"
     import ShowComponent from "@transitions/ShowComponent.vue"
     import ProjectService from "@services/ProjectService"
 
-    import type { Project } from "@/interfaces/interfaces"
+    import type { Project } from "@interfaces/interfaces"
 
     const service = new ProjectService()
     const projects: Ref<Project[]> = ref([])
     const isProjectFormVisible: Ref<boolean> = ref(false)
+    const isAddMemberFormVisible: Ref<boolean> = ref(false)
     const isTaskFormVisible: Ref<boolean> = ref(false)
     const isUpdate: Ref<boolean> = ref(false)
     const isProjectCardVisible: Ref<boolean> = ref(false)
@@ -42,6 +44,11 @@
         isProjectFormVisible.value = true
     }
     const hideProjectForm = (): boolean => (isProjectFormVisible.value = false)
+
+    const showAddMemberForm = (): boolean =>
+        (isAddMemberFormVisible.value = true)
+    const hideAddMemberForm = (): boolean =>
+        (isAddMemberFormVisible.value = false)
 
     const showTaskForm = (isEdit: boolean): void => {
         isUpdate.value = isEdit
@@ -146,7 +153,12 @@
                                 @click="showTaskForm(false)"
                             >
                                 Nueva Tarea
-                                <v-icon name="co-plus" scale="1.2" />
+                            </button>
+                            <button
+                                class="w-36 h-[40px] bg-green-600 hover:bg-green-700 rounded-sm"
+                                @click="showAddMemberForm"
+                            >
+                                Agregar miembro
                             </button>
                         </div>
 
@@ -175,10 +187,17 @@
             </ShowComponent>
 
             <ShowComponent>
+                <AddMemberForm
+                    v-if="isAddMemberFormVisible"
+                    @close="hideAddMemberForm"
+                />
+            </ShowComponent>
+
+            <ShowComponent>
                 <TaskForm
                     v-if="isTaskFormVisible"
                     :isUpdate="isUpdate"
-                    :project_id="project.id ?? ''"
+                    :project_id="parseInt(project.id ?? '0')"
                     @close="hideTaskForm"
                 />
             </ShowComponent>

@@ -7,6 +7,7 @@ use App\Models\Project;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class ProjectController extends Controller
@@ -19,6 +20,37 @@ class ProjectController extends Controller
     {
         $projects = Project::all();
         return response()->json(["projects" => $projects], 200);
+    }
+
+    /**
+     * Add member to project.
+     * @param string $id
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function addMember(string $id, Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            "member_id" => "required|string|exists:members,id"
+        ]);
+
+        try {
+            $project = Project::findOrFail($id);
+            $project->members()->attach($validated);
+
+            return response()->json([
+                "message" => "¡Miembro agregado exitosamente!"
+            ], 201);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(["message" => "¡Proyecto no encontrado!"], 404);
+        } catch(Exception $e) {
+            Log::error("Error: " . $e->getMessage());
+
+            return response()->json([
+                "message" => "¡Error al agregar el miembro!",
+                "error" => $e->getMessage()
+            ], 422);
+        }
     }
 
     /**

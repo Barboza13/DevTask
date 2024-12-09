@@ -1,10 +1,17 @@
-import { Member, MemberResponse } from "@/interfaces/interfaces"
+import {
+    Member,
+    MemberName,
+    MemberResponse,
+    MemberNameResponse,
+} from "@interfaces/interfaces"
 
 class MemberService {
     private members: Member[]
+    private membersNames: MemberName[]
 
     constructor() {
         this.members = []
+        this.membersNames = []
     }
 
     getMembers(): Member[] {
@@ -15,8 +22,37 @@ class MemberService {
         return this.members.find((member) => member.id == id)
     }
 
+    getMembersNames(): MemberName[] {
+        return this.membersNames
+    }
+
     clearMembers(): void {
         this.members = []
+    }
+
+    clearMembersNames(): void {
+        this.membersNames = []
+    }
+
+    async fetchMembersNames(): Promise<void> {
+        try {
+            const response = await fetch("/api/members/members-names", {
+                method: "GET",
+            })
+
+            if (!response.ok) {
+                const errorData = await response.json()
+                console.error(`Error: ${errorData.message}`)
+            }
+
+            const json: MemberNameResponse = await response.json()
+
+            json.members?.forEach((member: MemberName) =>
+                this.membersNames.push(member),
+            )
+        } catch (error) {
+            console.error(`Error al obtener las tareas: ${error}`)
+        }
     }
 
     async fetchMembers(): Promise<void> {

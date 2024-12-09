@@ -28,6 +28,17 @@ interface MemberResponse {
     error?: string
 }
 
+interface MemberName {
+    id: string
+    name: string
+}
+
+interface MemberNameResponse {
+    members?: MemberName[]
+    message: string
+    error?: string
+}
+
 //Tasks types.
 interface Task {
     id?: string
@@ -46,4 +57,13 @@ interface TaskResponse {
     error?: string
 }
 
-export { Project, ProjectResponse, Member, MemberResponse, Task, TaskResponse }
+export {
+    Project,
+    ProjectResponse,
+    Member,
+    MemberName,
+    MemberResponse,
+    MemberNameResponse,
+    Task,
+    TaskResponse,
+}

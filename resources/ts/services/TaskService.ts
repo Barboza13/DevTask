@@ -26,37 +26,6 @@ class TaskService {
         this.tasks = []
     }
 
-    getMembers(): Member[] {
-        return this.members
-    }
-
-    getMembersById(id: string): Member | undefined {
-        return this.members.find((member) => member.id == id)
-    }
-
-    clearMembers(): void {
-        this.members = []
-    }
-
-    async fetchMembers(): Promise<void> {
-        try {
-            const response = await fetch("/api/members-names", {
-                method: "GET",
-            })
-
-            if (!response.ok) {
-                const errorData = await response.json()
-                console.error(`Error: ${errorData.message}`)
-            }
-
-            const json: MemberResponse = await response.json()
-
-            json.members?.forEach((member: Member) => this.members.push(member))
-        } catch (error) {
-            console.error(`Error al obtener las tareas: ${error}`)
-        }
-    }
-
     async fetchTasks(): Promise<void> {
         try {
             const response = await fetch("/api/tasks", {
