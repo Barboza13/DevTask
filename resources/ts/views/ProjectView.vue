@@ -189,6 +189,7 @@
             <ShowComponent>
                 <AddMemberForm
                     v-if="isAddMemberFormVisible"
+                    :project_id="parseInt(project.id ?? '0')"
                     @close="hideAddMemberForm"
                 />
             </ShowComponent>

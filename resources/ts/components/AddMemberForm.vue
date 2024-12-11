@@ -1,13 +1,23 @@
 <script lang="ts" setup>
     import { Ref, ref, onMounted, onUnmounted } from "vue"
     import MemberService from "@services/MemberService"
+    import ProjectService from "@services/ProjectService"
 
     import type { MemberName } from "@interfaces/interfaces"
+
+    const props = defineProps({
+        project_id: {
+            type: Number,
+            required: true,
+        },
+    })
 
     const emit = defineEmits(["close"])
 
     const service = new MemberService()
+    const serviceProject = new ProjectService()
     const members: Ref<MemberName[]> = ref([])
+    const selectMemberId: Ref<string> = ref("")
     const message: Ref<string> = ref("")
 
     onMounted(async () => {
@@ -17,7 +27,27 @@
 
     onUnmounted(() => service.clearMembersNames())
 
-    const handleSubmit = (): void => {}
+    const handleSubmit = (event: Event): void => {
+        event.preventDefault()
+
+        serviceProject
+            .addMember(
+                props.project_id.toString(),
+                selectMemberId.value.toString(),
+            )
+            .then((data) => {
+                if (data) {
+                    message.value = data.message
+                }
+
+                setTimeout(() => (message.value = ""), 3000)
+
+                selectMemberId.value = ""
+            })
+            .catch((error) => {
+                console.error(error)
+            })
+    }
 </script>
 
 <template>
@@ -45,6 +75,7 @@
                 class="w-full h-10 bg-white text-black outline-none p-2 rounded-lg cursor-pointer"
                 name="member_id"
                 id="member_id"
+                v-model="selectMemberId"
             >
                 <option disabled selected value="">
                     Seleccione una opcion

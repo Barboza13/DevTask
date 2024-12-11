@@ -51,7 +51,9 @@ class MemberService {
                 this.membersNames.push(member),
             )
         } catch (error) {
-            console.error(`Error al obtener las tareas: ${error}`)
+            console.error(
+                `Error al obtener los nombres de los miembros: ${error}`,
+            )
         }
     }
 

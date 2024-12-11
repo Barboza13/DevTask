@@ -36,7 +36,7 @@ class ProjectController extends Controller
 
         try {
             $project = Project::findOrFail($id);
-            $project->members()->attach($validated);
+            $project->members()->syncWithoutDetaching($validated);
 
             return response()->json([
                 "message" => "¡Miembro agregado exitosamente!"

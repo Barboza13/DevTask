@@ -1,4 +1,8 @@
-import type { Project, ProjectResponse } from "@/interfaces/interfaces"
+import type {
+    Project,
+    ProjectResponse,
+    MemberNameResponse,
+} from "@/interfaces/interfaces"
 
 class ProjectService {
     private projects: Project[]
@@ -43,7 +47,7 @@ class ProjectService {
     async addMember(
         project_id: string,
         member_id: string,
-    ): Promise<string | null> {
+    ): Promise<MemberNameResponse | null> {
         try {
             const response = await fetch(
                 `/api/projects/add-member/${project_id}`,
@@ -52,7 +56,7 @@ class ProjectService {
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify(member_id),
+                    body: JSON.stringify({ member_id }),
                 },
             )
 
@@ -62,7 +66,7 @@ class ProjectService {
                 return null
             }
 
-            const json: string = await response.json()
+            const json: MemberNameResponse = await response.json()
 
             return json
         } catch (error) {
