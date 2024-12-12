@@ -81,6 +81,14 @@
 </script>
 
 <template>
+    <div
+        v-if="isTaskCardVisible"
+        class="absolute w-full h-full z-[999] bg-black opacity-70"
+    ></div>
+    <div
+        v-if="isTaskFormVisible"
+        class="absolute w-full h-full z-[1001] bg-black opacity-70"
+    ></div>
     <MainLayout>
         <template v-slot:main>
             <section

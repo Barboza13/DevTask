@@ -109,7 +109,7 @@
 
 <template>
     <form
-        class="flex flex-col justify-start items-center absolute top-10 w-[900px] h-[550px] bg-primary text-white rounded-md z-[1000]"
+        class="flex flex-col justify-start items-center absolute top-10 w-[900px] h-[550px] bg-primary text-white rounded-md z-[1002]"
         @submit="handleSubmit"
     >
         <div class="flex justify-end w-full p-2">

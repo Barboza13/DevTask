@@ -80,7 +80,7 @@
 
 <template>
     <form
-        class="flex flex-col justify-start items-center absolute bg-primary w-[500px] h-[500px] text-white rounded-md z-[1000]"
+        class="flex flex-col justify-start items-center absolute bg-primary w-[500px] h-[500px] text-white rounded-md z-[1002]"
         @submit="handleSubmit"
     >
         <div class="flex justify-end w-full p-2">

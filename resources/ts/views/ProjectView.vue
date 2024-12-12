@@ -92,6 +92,22 @@
 </script>
 
 <template>
+    <div
+        v-if="isProjectCardVisible"
+        class="absolute w-full h-full z-[999] bg-black opacity-70"
+    ></div>
+    <div
+        v-if="isProjectFormVisible"
+        class="absolute w-full h-full z-[1001] bg-black opacity-70"
+    ></div>
+    <div
+        v-if="isAddMemberFormVisible"
+        class="absolute w-full h-full z-[1001] bg-black opacity-70"
+    ></div>
+    <div
+        v-if="isTaskFormVisible"
+        class="absolute w-full h-full z-[1001] bg-black opacity-70"
+    ></div>
     <MainLayout>
         <template v-slot:main>
             <section
