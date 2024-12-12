@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::apiResource("projects", ProjectController::class);
 Route::post("projects/add-member/{project}", [ProjectController::class, "addMember"]);
+Route::get("projects/project-members/{project}", [ProjectController::class, "getMembers"]);
 
 Route::get("members/members-names", [MemberController::class, "getNames"]);
 Route::apiResource("members", MemberController::class);

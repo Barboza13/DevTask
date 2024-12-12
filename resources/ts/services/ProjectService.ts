@@ -2,13 +2,20 @@ import type {
     Project,
     ProjectResponse,
     MemberNameResponse,
-} from "@/interfaces/interfaces"
+    MemberName,
+} from "@interfaces/interfaces"
 
 class ProjectService {
     private projects: Project[]
+    private projectMembers: MemberName[]
 
     constructor() {
         this.projects = []
+        this.projectMembers = []
+    }
+
+    getProjectMembers(): MemberName[] {
+        return this.projectMembers
     }
 
     getProjects(): Project[] {
@@ -41,6 +48,32 @@ class ProjectService {
             )
         } catch (error) {
             console.error(`Error al obtener los proyectos: ${error}`)
+        }
+    }
+
+    async fetchProjectMembers(id: string): Promise<void> {
+        try {
+            const response = await fetch(
+                `/api/projects/project-members/${id}`,
+                {
+                    method: "GET",
+                },
+            )
+
+            if (!response.ok) {
+                const errorData = await response.json()
+                console.error(`Error: ${errorData.message}`)
+            }
+
+            const json: MemberNameResponse = await response.json()
+
+            json.members?.forEach((member: MemberName) =>
+                this.projectMembers.push(member),
+            )
+        } catch (error) {
+            console.error(
+                `Error al obtener los miembros del proyecto: ${error}`,
+            )
         }
     }
 

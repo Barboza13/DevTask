@@ -5,7 +5,7 @@
     import ShowComponent from "@transitions/ShowComponent.vue"
     import TaskService from "@services/TaskService"
 
-    import type { Task } from "@interfaces/interfaces"
+    import type { Member, Project, Task } from "@interfaces/interfaces"
 
     const service = new TaskService()
     const tasks: Ref<Task[]> = ref([])
@@ -20,6 +20,8 @@
         status: false,
         project_id: "",
         member_id: "",
+        member: {} as Member,
+        project: {} as Project,
     })
 
     const resetTasks = async (): Promise<void> => {
@@ -139,9 +141,24 @@
                         />
                     </div>
 
-                    <h1>Nombre: {{ task.title }}</h1>
-                    <h1>Descripcion: {{ task.description }}</h1>
-                    <h1>Fecha de entrega: {{ task.deadline }}</h1>
+                    <section
+                        class="flex flex-col justify-center items-start w-full px-4"
+                    >
+                        <h1>Nombre: {{ task.title }}</h1>
+                        <h1>Descripcion: {{ task.description }}</h1>
+                        <h1>Fecha de entrega: {{ task.deadline }}</h1>
+                        <h1>
+                            Responsable:
+                            {{ task.member.name }} {{ task.member.last_name }}
+                        </h1>
+                        <h1>Proyecto: {{ task.project.name }}</h1>
+                        <h1>
+                            Estado:
+                            {{
+                                task.status == 0 ? "Sin terminar" : "Terminado"
+                            }}
+                        </h1>
+                    </section>
                 </div>
             </ShowComponent>
 

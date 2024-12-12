@@ -18,8 +18,35 @@ class ProjectController extends Controller
      */
     public function index(): JsonResponse
     {
-        $projects = Project::all();
+        $projects = Project::with("members")->get();
         return response()->json(["projects" => $projects], 200);
+    }
+
+    /**
+     * Get members of project.
+     * @param string $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getMembers(string $id): JsonResponse
+    {
+        try {
+            $project = Project::findOrFail($id);
+            $members = $project->members()->select("id", "name")->get();
+
+            return response()->json([
+                "members" => $members,
+                "message" => ""
+            ], 200);
+        } catch(ModelNotFoundException $e) {
+            return response()->json(["message" => "¡Proyecto no encontrado!"], 404);
+        } catch (Exception $e) {
+            Log::error("Error: " . $e->getMessage());
+
+            return response()->json([
+                "message" => "¡Error al obtener los miembros del proyecto!",
+                "error" => $e->getMessage()
+            ], 422);
+        }
     }
 
     /**

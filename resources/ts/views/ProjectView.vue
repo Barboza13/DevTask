@@ -21,6 +21,7 @@
         name: "",
         deadline: "",
         description: "",
+        members: [],
     })
 
     const resetProjects = async (): Promise<void> => {
@@ -170,9 +171,27 @@
                         />
                     </div>
 
-                    <h1>Nombre: {{ project.name }}</h1>
-                    <h1>Descripcion: {{ project.description }}</h1>
-                    <h1>Fecha de entrega: {{ project.deadline }}</h1>
+                    <section
+                        class="flex flex-col justify-center items-start w-full px-4"
+                    >
+                        <h1>Nombre: {{ project.name }}</h1>
+                        <h1>Descripcion: {{ project.description }}</h1>
+                        <h1>Fecha de entrega: {{ project.deadline }}</h1>
+                        <h1>Integrantes:</h1>
+                        <ul>
+                            <li
+                                v-if="project.members.length > 0"
+                                v-for="member in project.members"
+                                :key="member.id"
+                                class="list-disc ml-10"
+                            >
+                                {{ member.name }}
+                            </li>
+                            <li v-else class="list-disc ml-10">
+                                Sin integrantes
+                            </li>
+                        </ul>
+                    </section>
                 </div>
             </ShowComponent>
 

@@ -4,6 +4,7 @@ interface Project {
     name: string
     deadline: string
     description: string
+    members: Member[]
 }
 
 interface ProjectResponse {
@@ -48,6 +49,8 @@ interface Task {
     description: string
     deadline: string
     status: boolean | number
+    member: Member
+    project: Project
 }
 
 interface TaskResponse {

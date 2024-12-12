@@ -1,8 +1,9 @@
 <script lang="ts" setup>
     import { Ref, ref, PropType, onMounted } from "vue"
     import TaskService from "@services/TaskService"
+    import ProjectService from "@services/ProjectService"
 
-    import type { Member, Task } from "@interfaces/interfaces"
+    import type { MemberName, Task } from "@interfaces/interfaces"
 
     const props = defineProps({
         isUpdate: {
@@ -22,8 +23,9 @@
     const emit = defineEmits(["close", "resetTasks"])
 
     const service = new TaskService()
+    const serviceProject = new ProjectService()
     const tasks: Ref<Task[]> = ref([])
-    const members: Ref<Member[]> = ref([])
+    const projectMembers: Ref<MemberName[]> = ref([])
 
     const title: Ref<string> = ref("")
     const description: Ref<string> = ref("")
@@ -46,8 +48,8 @@
         await service.fetchTasks()
         tasks.value = service.getTasks()
 
-        await service.fetchMembers()
-        members.value = service.getMembers()
+        await serviceProject.fetchProjectMembers(props.project_id.toString())
+        projectMembers.value = serviceProject.getProjectMembers()
     })
 
     const closeForm = (): void => emit("close")
@@ -179,11 +181,15 @@
                             Seleccione una opcion
                         </option>
                         <option
-                            v-for="member in members"
+                            v-if="projectMembers.length > 0"
+                            v-for="member in projectMembers"
                             :key="member.id"
                             :value="member.id"
                         >
                             {{ member.name }}
+                        </option>
+                        <option v-else disabled value="">
+                            No hay miembros en el proyecto.
                         </option>
                     </select>
                 </div>

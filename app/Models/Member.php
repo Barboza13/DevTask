@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Member extends Model
@@ -38,8 +38,8 @@ class Member extends Model
      * Relationship with tasks.
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function tasks(): BelongsTo
+    public function tasks(): HasMany
     {
-        return $this->belongsTo(Task::class);
+        return $this->hasMany(Task::class);
     }
 }
