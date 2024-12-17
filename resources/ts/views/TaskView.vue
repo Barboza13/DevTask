@@ -108,9 +108,14 @@
                         v-for="task in tasks"
                         :key="task.id"
                         @click="handleTaskCardClick(task.id ?? '')"
-                        class="flex justify-center items-center w-32 h-32 bg-primary text-white rounded-lg cursor-pointer hover:scale-105 duration-300 mt-2"
+                        class="flex justify-center items-center w-32 h-32 bg-primary rounded-lg cursor-pointer hover:scale-105 duration-300 mt-2"
                     >
-                        <h1 class="flex flex-col justify-center items-center">
+                        <h1
+                            :class="[
+                                task.status ? 'text-green-500' : 'text-white',
+                                'flex flex-col justify-center items-center',
+                            ]"
+                        >
                             <v-icon name="fa-file-code" scale="3" />
                             {{ task.title }}
                         </h1>

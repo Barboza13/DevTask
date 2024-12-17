@@ -44,4 +44,14 @@ class Project extends Model
     {
         return $this->hasMany(Task::class);
     }
+
+    /**
+     * Delete project and the tasks with SoftDeletes.
+     * @return bool|null
+     */
+    public function delete(): bool|null
+    {
+        $this->tasks()->delete();
+        return parent::delete();
+    }
 }

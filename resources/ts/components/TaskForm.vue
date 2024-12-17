@@ -204,7 +204,6 @@
                         v-model="status"
                         name="status"
                         id="status"
-                        required
                     />
                     <label for="status">Marcar como completado.</label>
                 </div>
