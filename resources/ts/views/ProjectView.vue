@@ -164,7 +164,7 @@
                         class="flex justify-center items-center w-32 h-32 bg-primary text-white rounded-lg cursor-pointer hover:scale-105 duration-300 mt-2"
                     >
                         <h1 class="flex flex-col justify-center items-center">
-                            <v-icon name="fa-file-code" scale="3" />
+                            <v-icon name="md-foldercopy" scale="3" />
                             {{ project.name }}
                         </h1>
                     </div>

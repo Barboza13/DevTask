@@ -142,7 +142,9 @@
                     >
                         <div class="flex justify-center items-center pl-4">
                             <v-icon name="io-person" scale="1" />
-                            <h1 class="text-xl pl-2">{{ member.name }}</h1>
+                            <h1 class="text-xl pl-2">
+                                {{ member.name }} {{ member.last_name }}
+                            </h1>
                         </div>
                     </div>
                     <!-- ----------- -->

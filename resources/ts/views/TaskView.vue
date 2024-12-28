@@ -6,7 +6,6 @@
     import TaskService from "@services/TaskService"
 
     import type { Member, Project, Task } from "@interfaces/interfaces"
-    import { error, time } from "console"
 
     const service = new TaskService()
     const tasks: Ref<Task[]> = ref([])
@@ -129,23 +128,28 @@
 
                 <div
                     v-else
-                    class="grid grid-cols-7 place-content-start w-full h-full overflow-y-auto gap-2 px-4"
+                    class="grid grid-cols-6 place-content-start w-full h-full overflow-y-auto gap-2 px-4"
                 >
                     <!-- Tasks Cards -->
                     <div
                         v-for="task in tasks"
                         :key="task.id"
                         @click="handleTaskCardClick(task.id ?? '')"
-                        class="flex justify-center items-center w-36 h-32 bg-primary rounded-lg cursor-pointer hover:scale-105 duration-300 mt-2"
+                        class="flex justify-center items-center w-44 h-32 bg-primary rounded-lg cursor-pointer hover:scale-105 duration-300 mt-2"
                     >
                         <div
                             :class="[
                                 task.status ? 'text-blue-400' : 'text-white',
-                                'flex flex-col justify-center items-center px-1',
+                                'flex flex-col justify-evenly items-center w-full h-full px-1',
                             ]"
                         >
-                            <v-icon name="fa-file-code" scale="2.5" />
-                            <h3 class="text-md text-center">
+                            <div
+                                class="flex justify-center items-center w-full"
+                            >
+                                <v-icon name="fa-file-code" scale="1.5" />
+                                <h2 class="text-lg">{{ task.project.name }}</h2>
+                            </div>
+                            <h3 class="text-sm text-center">
                                 {{ task.title }}
                             </h3>
                         </div>

@@ -13,6 +13,7 @@ import {
     MdModeeditoutline,
     IoPerson,
     RiLoader4Line,
+    MdFoldercopy,
 } from "oh-vue-icons/icons"
 
 const app = createApp(App)
@@ -26,7 +27,9 @@ addIcons(
     MdModeeditoutline,
     IoPerson,
     RiLoader4Line,
+    MdFoldercopy,
 )
+
 app.component("v-icon", OhVueIcon)
 app.use(router)
 app.use(pinia)
