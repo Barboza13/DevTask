@@ -12,12 +12,21 @@ import {
     FaTrash,
     MdModeeditoutline,
     IoPerson,
+    RiLoader4Line,
 } from "oh-vue-icons/icons"
 
 const app = createApp(App)
 const pinia = createPinia()
 
-addIcons(CoPlus, IoClose, FaFileCode, FaTrash, MdModeeditoutline, IoPerson)
+addIcons(
+    CoPlus,
+    IoClose,
+    FaFileCode,
+    FaTrash,
+    MdModeeditoutline,
+    IoPerson,
+    RiLoader4Line,
+)
 app.component("v-icon", OhVueIcon)
 app.use(router)
 app.use(pinia)

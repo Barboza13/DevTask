@@ -12,6 +12,7 @@
     const isFormVisible: Ref<boolean> = ref(false)
     const isUpdate: Ref<boolean> = ref(false)
     const isMemberCardVisible: Ref<boolean> = ref(false)
+    const isLoading: Ref<boolean> = ref(false)
     const member: Ref<Member> = ref({
         id: "",
         name: "",
@@ -19,9 +20,19 @@
         email: "",
     })
 
-    onMounted(async (): Promise<void> => {
-        await service.fetchMembers()
-        members.value = service.getMembers()
+    onMounted(async () => {
+        isLoading.value = true
+        await service
+            .fetchMembers()
+            .then(() => {
+                members.value = service.getMembers()
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+            .finally(() => {
+                isLoading.value = false
+            })
     })
 
     onUnmounted((): void => service.clearMembers())
@@ -104,9 +115,25 @@
                         </button>
                     </div>
                 </div>
+
+                <!-- Loading icon -->
                 <div
+                    v-if="isLoading"
+                    class="flex justify-center items-center w-full h-full"
+                >
+                    <v-icon
+                        name="ri-loader-4-line"
+                        scale="4"
+                        animation="spin"
+                    />
+                </div>
+                <!--  -->
+
+                <div
+                    v-else
                     class="flex flex-col justify-start items-center w-full h-full overflow-y-auto gap-2 px-2 pt-2"
                 >
+                    <!-- Member Card -->
                     <div
                         v-for="member in members"
                         :key="member.id"
@@ -118,6 +145,7 @@
                             <h1 class="text-xl pl-2">{{ member.name }}</h1>
                         </div>
                     </div>
+                    <!-- ----------- -->
                 </div>
             </section>
 

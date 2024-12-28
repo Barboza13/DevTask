@@ -16,6 +16,7 @@
     const isTaskFormVisible: Ref<boolean> = ref(false)
     const isUpdate: Ref<boolean> = ref(false)
     const isProjectCardVisible: Ref<boolean> = ref(false)
+    const isLoading: Ref<boolean> = ref(false)
     const project: Ref<Project> = ref({
         id: "",
         name: "",
@@ -31,8 +32,18 @@
     }
 
     onMounted(async () => {
-        await service.fetchProjects()
-        projects.value = service.getProjects()
+        isLoading.value = true
+        await service
+            .fetchProjects()
+            .then(() => {
+                projects.value = service.getProjects()
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+            .finally(() => {
+                isLoading.value = false
+            })
     })
 
     onUnmounted(() => service.clearProjects())
@@ -127,9 +138,25 @@
                         </button>
                     </div>
                 </div>
+
+                <!-- Loading icon -->
                 <div
+                    v-if="isLoading"
+                    class="flex justify-center items-center w-full h-full"
+                >
+                    <v-icon
+                        name="ri-loader-4-line"
+                        scale="4"
+                        animation="spin"
+                    />
+                </div>
+                <!--  -->
+
+                <div
+                    v-else
                     class="grid grid-cols-7 place-content-start w-full h-full overflow-y-auto gap-2 px-4"
                 >
+                    <!-- Project Cards -->
                     <div
                         v-for="project in projects"
                         :key="project.id"
@@ -141,6 +168,7 @@
                             {{ project.name }}
                         </h1>
                     </div>
+                    <!-- ------------ -->
                 </div>
             </section>
 

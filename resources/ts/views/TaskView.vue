@@ -6,12 +6,14 @@
     import TaskService from "@services/TaskService"
 
     import type { Member, Project, Task } from "@interfaces/interfaces"
+    import { error, time } from "console"
 
     const service = new TaskService()
     const tasks: Ref<Task[]> = ref([])
     const isTaskFormVisible: Ref<boolean> = ref(false)
     const isUpdate: Ref<boolean> = ref(false)
     const isTaskCardVisible: Ref<boolean> = ref(false)
+    const isLoading: Ref<boolean> = ref(false)
     const task: Ref<Task> = ref({
         id: "",
         title: "",
@@ -31,8 +33,18 @@
     }
 
     onMounted(async () => {
-        await service.fetchTasks()
-        tasks.value = service.getTasks()
+        isLoading.value = true
+        await service
+            .fetchTasks()
+            .then(() => {
+                tasks.value = service.getTasks()
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+            .finally(() => {
+                isLoading.value = false
+            })
     })
 
     onUnmounted(() => service.clearTasks())
@@ -101,25 +113,44 @@
                         </h1>
                     </div>
                 </div>
+
+                <!-- Loading icon -->
                 <div
+                    v-if="isLoading"
+                    class="flex justify-center items-center w-full h-full"
+                >
+                    <v-icon
+                        name="ri-loader-4-line"
+                        scale="4"
+                        animation="spin"
+                    />
+                </div>
+                <!--  -->
+
+                <div
+                    v-else
                     class="grid grid-cols-7 place-content-start w-full h-full overflow-y-auto gap-2 px-4"
                 >
+                    <!-- Tasks Cards -->
                     <div
                         v-for="task in tasks"
                         :key="task.id"
                         @click="handleTaskCardClick(task.id ?? '')"
-                        class="flex justify-center items-center w-32 h-32 bg-primary rounded-lg cursor-pointer hover:scale-105 duration-300 mt-2"
+                        class="flex justify-center items-center w-36 h-32 bg-primary rounded-lg cursor-pointer hover:scale-105 duration-300 mt-2"
                     >
-                        <h1
+                        <div
                             :class="[
-                                task.status ? 'text-green-500' : 'text-white',
-                                'flex flex-col justify-center items-center',
+                                task.status ? 'text-blue-400' : 'text-white',
+                                'flex flex-col justify-center items-center px-1',
                             ]"
                         >
-                            <v-icon name="fa-file-code" scale="3" />
-                            {{ task.title }}
-                        </h1>
+                            <v-icon name="fa-file-code" scale="2.5" />
+                            <h3 class="text-md text-center">
+                                {{ task.title }}
+                            </h3>
+                        </div>
                     </div>
+                    <!-- ----------- -->
                 </div>
             </section>
 
