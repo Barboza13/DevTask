@@ -23,6 +23,29 @@ class ProjectController extends Controller
     }
 
     /**
+     * Get project names.
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getProjectNames(): JsonResponse
+    {
+        try {
+            $projects = Project::select("id", "name")->get();
+
+            return response()->json([
+                "projects" => $projects,
+                "message" => ""
+            ], 200);
+        } catch (Exception $e) {
+            Log::error("Error: " . $e->getMessage());
+
+            return response()->json([
+                "message" => "¡Error al obtener los nombres de los proyectos!",
+                "error" => $e->getMessage()
+            ], 422);
+        }
+    }
+
+    /**
      * Get members of project.
      * @param string $id
      * @return \Illuminate\Http\JsonResponse
@@ -96,7 +119,7 @@ class ProjectController extends Controller
             ], 201);
         } catch (Exception $e) {
             Log::error("Error: " . $e->getMessage());
-            
+
             return response()->json([
                 "message" => "¡Error al guardar el proyecto!",
                 "error" => $e->getMessage()

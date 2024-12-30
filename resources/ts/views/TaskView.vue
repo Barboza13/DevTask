@@ -4,11 +4,19 @@
     import TaskForm from "@components/TaskForm.vue"
     import ShowComponent from "@transitions/ShowComponent.vue"
     import TaskService from "@services/TaskService"
+    import ProjectService from "@services/ProjectService"
 
-    import type { Member, Project, Task } from "@interfaces/interfaces"
+    import type {
+        Member,
+        Project,
+        ProjectName,
+        Task,
+    } from "@interfaces/interfaces"
 
     const service = new TaskService()
+    const projectService = new ProjectService()
     const tasks: Ref<Task[]> = ref([])
+    const projectNames: Ref<ProjectName[]> = ref([])
     const isTaskFormVisible: Ref<boolean> = ref(false)
     const isUpdate: Ref<boolean> = ref(false)
     const isTaskCardVisible: Ref<boolean> = ref(false)
@@ -44,6 +52,9 @@
             .finally(() => {
                 isLoading.value = false
             })
+
+        await projectService.fetchProjectNames()
+        projectNames.value = projectService.getProjectNames()
     })
 
     onUnmounted(() => service.clearTasks())
@@ -105,12 +116,31 @@
             <section
                 class="flex flex-col bg-gray-200 w-[1200px] h-[500px] rounded-xl p-2"
             >
-                <div class="border-b-[1px] border-b-secondary h-[60px] w-full">
-                    <div class="flex h-full justify-around items-center">
-                        <h1 class="text-2xl text-secondary">
-                            Tareas existentes
-                        </h1>
-                    </div>
+                <div
+                    class="flex justify-around items-center border-b-[1px] border-b-secondary h-[60px] w-full"
+                >
+                    <h1 class="text-2xl text-secondary">Tareas existentes</h1>
+                    <form class="flex">
+                        <h3 class="text-sm text-secondary">
+                            Filtrar por proyecto:
+                        </h3>
+                        <select
+                            class="w-full cursor-pointer rounded-md"
+                            name="projectName"
+                            id=""
+                        >
+                            <option selected disabled value="">
+                                Seleccione una tarea
+                            </option>
+                            <option
+                                v-for="project in projectNames"
+                                :key="project.id"
+                                :value="project.id"
+                            >
+                                {{ project.name }}
+                            </option>
+                        </select>
+                    </form>
                 </div>
 
                 <!-- Loading icon -->

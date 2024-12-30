@@ -1,5 +1,5 @@
 //Projects types.
-interface Project {
+export interface Project {
     id?: string
     name: string
     deadline: string
@@ -7,41 +7,52 @@ interface Project {
     members: Member[]
 }
 
-interface ProjectResponse {
+export interface ProjectResponse {
     projects?: Project[]
     project?: Project
     message: string
     error?: string
 }
 
+export interface ProjectName {
+    id: string
+    name: string
+}
+
+export interface ProjectNameResponse {
+    projects?: ProjectName[]
+    message: string
+    error?: string
+}
+
 //Members types.
-interface Member {
+export interface Member {
     id?: string
     name: string
     last_name: string
     email: string
 }
 
-interface MemberResponse {
+export interface MemberResponse {
     members?: Member[]
     member?: Member
     message: string
     error?: string
 }
 
-interface MemberName {
+export interface MemberName {
     id: string
     name: string
 }
 
-interface MemberNameResponse {
+export interface MemberNameResponse {
     members?: MemberName[]
     message: string
     error?: string
 }
 
 //Tasks types.
-interface Task {
+export interface Task {
     id?: string
     member_id: string
     project_id: string
@@ -53,20 +64,9 @@ interface Task {
     project: Project
 }
 
-interface TaskResponse {
+export interface TaskResponse {
     tasks?: Task[]
     task?: Task
     message: string
     error?: string
-}
-
-export {
-    Project,
-    ProjectResponse,
-    Member,
-    MemberName,
-    MemberResponse,
-    MemberNameResponse,
-    Task,
-    TaskResponse,
 }

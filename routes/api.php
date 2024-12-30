@@ -9,9 +9,10 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // })->middleware('auth:sanctum');
 
-Route::apiResource("projects", ProjectController::class);
 Route::post("projects/add-member/{project}", [ProjectController::class, "addMember"]);
 Route::get("projects/project-members/{project}", [ProjectController::class, "getMembers"]);
+Route::get("projects/project-names", [ProjectController::class, "getProjectNames"]);
+Route::apiResource("projects", ProjectController::class);
 
 Route::get("members/members-names", [MemberController::class, "getNames"]);
 Route::apiResource("members", MemberController::class);
