@@ -39,9 +39,33 @@ class TaskService {
 
             const json: TaskResponse = await response.json()
 
+            this.clearTasks()
             json.tasks?.forEach((task: Task) => this.tasks.push(task))
         } catch (error) {
             console.error(`Error al obtener las tareas: ${error}`)
+        }
+    }
+
+    async fetchTasksByProjectId(id: string): Promise<void> {
+        try {
+            const response = await fetch(
+                `/api/projects/tasks-by-project/${id}`,
+                {
+                    method: "GET",
+                },
+            )
+
+            if (!response.ok) {
+                const errorData = await response.json()
+                console.error(`Error: ${errorData.message}`)
+            }
+
+            const json: TaskResponse = await response.json()
+
+            this.clearTasks()
+            json.tasks?.forEach((task: Task) => this.tasks.push(task))
+        } catch (error) {
+            console.error(`Error al obtener las tareas por proyecto: ${error}`)
         }
     }
 

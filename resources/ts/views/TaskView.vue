@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-    import { ref, Ref, onMounted, onUnmounted } from "vue"
+    import { ref, Ref, onMounted, onUnmounted, computed } from "vue"
     import MainLayout from "@layouts/MainLayout.vue"
     import TaskForm from "@components/TaskForm.vue"
     import ShowComponent from "@transitions/ShowComponent.vue"
@@ -17,6 +17,7 @@
     const projectService = new ProjectService()
     const tasks: Ref<Task[]> = ref([])
     const projectNames: Ref<ProjectName[]> = ref([])
+    const projectSelect: Ref<string> = ref("")
     const isTaskFormVisible: Ref<boolean> = ref(false)
     const isUpdate: Ref<boolean> = ref(false)
     const isTaskCardVisible: Ref<boolean> = ref(false)
@@ -100,6 +101,20 @@
         hideTaskCard()
         showTaskForm(true)
     }
+
+    const sortTasksByProjectId = async (): Promise<void> => {
+        const projectId: string = projectSelect.value
+
+        if (projectId === "") {
+            await service.fetchTasks().then(() => {
+                tasks.value = service.getTasks()
+            })
+        } else {
+            await service.fetchTasksByProjectId(projectId).then(() => {
+                tasks.value = service.getTasks()
+            })
+        }
+    }
 </script>
 
 <template>
@@ -120,7 +135,7 @@
                     class="flex justify-around items-center border-b-[1px] border-b-secondary h-[60px] w-full"
                 >
                     <h1 class="text-2xl text-secondary">Tareas existentes</h1>
-                    <form class="flex">
+                    <div class="flex">
                         <h3 class="text-sm text-secondary">
                             Filtrar por proyecto:
                         </h3>
@@ -128,10 +143,10 @@
                             class="w-full cursor-pointer rounded-md"
                             name="projectName"
                             id=""
+                            v-model="projectSelect"
+                            @change="sortTasksByProjectId"
                         >
-                            <option selected disabled value="">
-                                Seleccione una tarea
-                            </option>
+                            <option selected value="">Todas las tareas</option>
                             <option
                                 v-for="project in projectNames"
                                 :key="project.id"
@@ -140,7 +155,7 @@
                                 {{ project.name }}
                             </option>
                         </select>
-                    </form>
+                    </div>
                 </div>
 
                 <!-- Loading icon -->

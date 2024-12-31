@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class ProjectController extends Controller
@@ -40,6 +41,54 @@ class ProjectController extends Controller
 
             return response()->json([
                 "message" => "¡Error al obtener los nombres de los proyectos!",
+                "error" => $e->getMessage()
+            ], 422);
+        }
+    }
+
+    /**
+     * Get tasks by project id.
+     * @param string $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getTasksByProjectId(string $id): JsonResponse
+    {
+        try {
+            $project = Project::with("tasks")->findOrFail($id);
+            $tasks = $project->tasks()->get()->map(function($task) {
+                return [
+                    "id" => $task->id,
+                    "title" => $task->title,
+                    "status" => $task->status,
+                    "description" => $task->description,
+                    "deadline" => $task->deadline,
+                    "project_id" => $task->project->id,
+                    "project" => [
+                        "id" => $task->project->id,
+                        "name" => $task->project->name
+                    ],
+                    "member" => [
+                        "id" => $task->member->id,
+                        "name" => $task->member->name,
+                        "last_name" => $task->member->last_name
+                    ]
+                ];
+            });
+
+            // $tasks = DB::select("SELECT p.name, t.title, t.status, t.description, t.deadline FROM projects p
+            //     INNER JOIN tasks t ON p.id = t.project_id WHERE p.id = :id", ["id" => $id]);
+
+            return response()->json([
+                "tasks" => $tasks,
+                "message" => ""
+            ], 200);
+        } catch(ModelNotFoundException $e) {
+            return response()->json(["message" => "¡Proyecto no encontrado!"], 404);
+        } catch (Exception $e) {
+            Log::error("Error: " . $e->getMessage());
+
+            return response()->json([
+                "message" => "¡Error al obtener las tareas del proyecto!",
                 "error" => $e->getMessage()
             ], 422);
         }
