@@ -35,9 +35,17 @@
     })
 
     const resetTasks = async (): Promise<void> => {
-        service.clearTasks()
-        await service.fetchTasks()
-        tasks.value = service.getTasks()
+        const projectId: string = projectSelect.value
+
+        if (projectId === "") {
+            await service.fetchTasks().then(() => {
+                tasks.value = service.getTasks()
+            })
+        } else {
+            await service.fetchTasksByProjectId(projectId).then(() => {
+                tasks.value = service.getTasks()
+            })
+        }
     }
 
     onMounted(async () => {

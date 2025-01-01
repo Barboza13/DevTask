@@ -58,19 +58,23 @@ class ProjectController extends Controller
             $tasks = $project->tasks()->get()->map(function($task) {
                 return [
                     "id" => $task->id,
+                    "member_id" => $task->member->id,
+                    "project_id" => $task->project->id,
                     "title" => $task->title,
-                    "status" => $task->status,
                     "description" => $task->description,
                     "deadline" => $task->deadline,
-                    "project_id" => $task->project->id,
-                    "project" => [
-                        "id" => $task->project->id,
-                        "name" => $task->project->name
-                    ],
+                    "status" => $task->status,
                     "member" => [
                         "id" => $task->member->id,
                         "name" => $task->member->name,
-                        "last_name" => $task->member->last_name
+                        "last_name" => $task->member->last_name,
+                        "email" => $task->member->email,
+                    ],
+                    "project" => [
+                        "id" => $task->project->id,
+                        "name" => $task->project->name,
+                        "deadline" => $task->project->deadline,
+                        "description" => $task->project->description,
                     ]
                 ];
             });
