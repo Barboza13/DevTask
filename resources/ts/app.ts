@@ -14,6 +14,7 @@ import {
     IoPerson,
     RiLoader4Line,
     MdFoldercopy,
+    HiArrowSmRight,
 } from "oh-vue-icons/icons"
 
 const app = createApp(App)
@@ -28,6 +29,7 @@ addIcons(
     IoPerson,
     RiLoader4Line,
     MdFoldercopy,
+    HiArrowSmRight,
 )
 
 app.component("v-icon", OhVueIcon)
