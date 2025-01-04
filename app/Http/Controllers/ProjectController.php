@@ -8,7 +8,6 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class ProjectController extends Controller
@@ -55,7 +54,7 @@ class ProjectController extends Controller
     {
         try {
             $project = Project::with("tasks")->findOrFail($id);
-            $tasks = $project->tasks()->get()->map(function($task) {
+            $tasks = $project->tasks()->orderByDesc("id")->get()->map(function($task) {
                 return [
                     "id" => $task->id,
                     "member_id" => $task->member->id,

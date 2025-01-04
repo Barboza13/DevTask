@@ -17,7 +17,7 @@ class TaskController extends Controller
      */
     public function index(): JsonResponse
     {
-        $tasks = Task::with(["member", "project"])->get();
+        $tasks = Task::with(["member", "project"])->orderByDesc("id")->get();
         return response()->json(["tasks" => $tasks], 200);
     }
 
