@@ -19,7 +19,7 @@
 
 <template>
     <nav
-        class="w-full flex justify-around items-center h-full text-xl text-white bg-primary"
+        class="flex justify-around items-center w-full h-full text-xl text-white bg-primary"
     >
         <div>
             <router-link to="/">

@@ -3,15 +3,12 @@
 </script>
 
 <template>
-    <div class="">
-        <header class="h-[10vh]">
-            <Navbar />
-        </header>
-        <main class="flex justify-center items-center h-[90vh]">
-            <slot name="main"></slot>
-        </main>
-        <footer class=""></footer>
-    </div>
+    <header class="w-full h-[10vh]">
+        <Navbar />
+    </header>
+    <main class="flex justify-center items-center w-full h-[90vh]">
+        <slot name="main"></slot>
+    </main>
 </template>
 
 <style scoped></style>
