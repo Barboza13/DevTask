@@ -17,9 +17,16 @@
             "@layouts/*": ["resources/ts/layouts/*"],
             "@interfaces/*": ["resources/ts/interfaces/*"],
             "@transitions/*": ["resources/ts/transitions/*"],
+            "@assets/*": ["resources/ts/assets/*"],
+            "@icons/*": ["resources/ts/assets/icons/*"],
             "@services/*": ["resources/ts/services/*"]
         }
     },
-    "include": ["resources/ts/**/*.ts", "resources/ts/**/*.vue"],
+    "include": [
+        "resources/ts/**/*.ts",
+        "resources/ts/**/*.vue",
+        "src/**/*",
+        "svg.d.ts"
+    ],
     "exclude": ["node_modules"]
 }
