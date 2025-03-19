@@ -8,10 +8,6 @@
             type: Number,
             required: true,
         },
-        img: {
-            type: String,
-            required: true,
-        },
         link: {
             type: String,
             required: true,
@@ -23,11 +19,10 @@
 
 <template>
     <div
-        class="flex flex-col justify-between items-center w-3/4 h-36 bg-gray-200 rounded-md gap-4 p-4"
+        class="flex flex-col justify-between items-center w-3/4 h-28 bg-gray-200 shadow-lg shadow-black/35 rounded-md p-4"
     >
         <div class="flex justify-start items-center w-full gap-2">
-            <img class="w-12" :src="props.img" :alt="lowerCaseName + ' icon'" />
-            <h1 class="text-3xl">{{ props.recordName }}</h1>
+            <h1 class="text-2xl">{{ props.recordName }}</h1>
         </div>
         <div class="flex justify-evenly items-center w-full gap-2">
             <h3 class="w-1/2">Registros: {{ props.recordNumber }}</h3>

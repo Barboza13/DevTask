@@ -11,10 +11,10 @@
     const currentPath: string = router.currentRoute.value.fullPath
     const showNavItems: Ref<boolean> = ref(false)
     const links: Link[] = [
-        { href: "/", text: "Home" },
-        { href: "/projects", text: "Projects" },
-        { href: "/tasks", text: "Tasks" },
-        { href: "/members", text: "Members" },
+        { href: "/", text: "Inicio" },
+        { href: "/projects", text: "Proyectos" },
+        { href: "/tasks", text: "Tareas" },
+        { href: "/members", text: "Miembros" },
     ]
 
     const handleShowNavItems = (): boolean =>
