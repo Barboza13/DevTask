@@ -1,20 +1,25 @@
 <script lang="ts" setup>
     import { ref, Ref, onMounted, onUnmounted } from "vue"
     import MainLayout from "@layouts/MainLayout.vue"
+    import CardProjectLayout from "@layouts/CardProjectLayout.vue"
+    import ListProjectLayout from "@layouts/ListProjectLayout.vue"
     import ProjectForm from "@components/ProjectForm.vue"
     import TaskForm from "@components/TaskForm.vue"
     import AddMemberForm from "@components/AddMemberForm.vue"
     import ShowComponent from "@transitions/ShowComponent.vue"
     import ProjectService from "@services/ProjectService"
+    import { useProjectStore } from "@stores/projectStore"
 
     import type { Project } from "@interfaces/interfaces"
 
     const service = new ProjectService()
+    const store = useProjectStore()
     const projects: Ref<Project[]> = ref([])
     const isProjectFormVisible: Ref<boolean> = ref(false)
     const isAddMemberFormVisible: Ref<boolean> = ref(false)
     const isTaskFormVisible: Ref<boolean> = ref(false)
     const isUpdate: Ref<boolean> = ref(false)
+    const seeBy: Ref<string> = ref(store.typeProjectView)
     const isProjectCardVisible: Ref<boolean> = ref(false)
     const isLoading: Ref<boolean> = ref(false)
     const project: Ref<Project> = ref({
@@ -68,7 +73,7 @@
     }
     const hideTaskForm = (): boolean => (isTaskFormVisible.value = false)
 
-    const handleProjectCardClick = (id: string): void => {
+    const handleProjectClick = (id: string): void => {
         const projectData: Project | undefined = service.getProjectById(id)
 
         if (!projectData) {
@@ -129,6 +134,19 @@
                         <h1 class="text-2xl text-secondary">
                             Proyectos existentes
                         </h1>
+                        <div class="flex items-center h-8 w-48">
+                            <h3 class="text-sm w-[30%] text-secondary">
+                                Ver por:
+                            </h3>
+                            <select
+                                class="h-full w-[70%] cursor-pointer rounded-md"
+                                v-model="seeBy"
+                                @change="store.setTypeProjectView(seeBy)"
+                            >
+                                <option value="card">Tarjeta</option>
+                                <option value="list">Lista</option>
+                            </select>
+                        </div>
                         <button
                             class="flex justify-center bg-green-600 hover:bg-green-700 text-white rounded-md p-2 gap-1"
                             @click="showProjectForm(false)"
@@ -152,24 +170,16 @@
                 </div>
                 <!--  -->
 
-                <div
+                <CardProjectLayout
+                    v-if="seeBy === 'card'"
+                    :projects="projects"
+                    @handleProjectClick="handleProjectClick"
+                />
+                <ListProjectLayout
                     v-else
-                    class="grid grid-cols-7 place-content-start w-full h-full overflow-y-auto gap-2 px-4"
-                >
-                    <!-- Project Cards -->
-                    <div
-                        v-for="project in projects"
-                        :key="project.id"
-                        @click="handleProjectCardClick(project.id ?? '')"
-                        class="flex justify-center items-center w-32 h-32 bg-primary text-white rounded-lg cursor-pointer hover:scale-105 duration-300 mt-2"
-                    >
-                        <h1 class="flex flex-col justify-center items-center">
-                            <v-icon name="md-foldercopy" scale="3" />
-                            {{ project.name }}
-                        </h1>
-                    </div>
-                    <!-- ------------ -->
-                </div>
+                    :projects="projects"
+                    @handleProjectClick="handleProjectClick"
+                />
             </section>
 
             <ShowComponent>

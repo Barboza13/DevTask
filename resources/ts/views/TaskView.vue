@@ -188,7 +188,7 @@
                         v-for="task in tasks"
                         :key="task.id"
                         @click="handleTaskCardClick(task.id ?? '')"
-                        class="flex justify-center items-center w-44 h-32 bg-primary rounded-lg cursor-pointer hover:scale-105 duration-300 mt-2"
+                        class="flex justify-center items-center w-44 h-32 bg-primary rounded-lg cursor-pointer hover:scale-105 shadow-lg shadow-black/35 transition-transform duration-200 ease-in mt-2"
                     >
                         <div
                             :class="[

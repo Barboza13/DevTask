@@ -19,7 +19,8 @@
             "@transitions/*": ["resources/ts/transitions/*"],
             "@assets/*": ["resources/ts/assets/*"],
             "@icons/*": ["resources/ts/assets/icons/*"],
-            "@services/*": ["resources/ts/services/*"]
+            "@services/*": ["resources/ts/services/*"],
+            "@stores/*": ["resources/ts/stores/*"]
         }
     },
     "include": [

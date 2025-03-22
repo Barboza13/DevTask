@@ -138,7 +138,7 @@
                         v-for="member in members"
                         :key="member.id"
                         @click="handleMemberCardClick(member.id ?? '')"
-                        class="flex justify-start items-center w-full h-10 bg-primary text-white rounded-full cursor-pointer hover:scale-[1.01] duration-75 mt-[.5px]"
+                        class="flex justify-start items-center w-full h-10 bg-primary text-white rounded-full cursor-pointer hover:scale-[1.01] shadow-lg shadow-black/35 transition-transform duration-200 ease-in mt-[.5px]"
                     >
                         <div class="flex justify-center items-center pl-4">
                             <v-icon name="io-person" scale="1" />

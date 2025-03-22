@@ -22,6 +22,7 @@ export default defineConfig({
             "@assets": path.resolve(__dirname, "resources/ts/assets"),
             "@icons": path.resolve(__dirname, "resources/ts/assets/icons"),
             "@services": path.resolve(__dirname, "resources/ts/services"),
+            "@stores": path.resolve(__dirname, "resources/ts/stores"),
         },
     },
 })
