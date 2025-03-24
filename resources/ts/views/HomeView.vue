@@ -28,7 +28,7 @@
 
 <template>
     <MainLayout>
-        <template v-slot:main>
+        <template #main>
             <section
                 class="grid grid-cols-1 lg:grid-cols-3 place-content-start place-items-center w-full h-full p-4 gap-4 md:gap-0"
             >

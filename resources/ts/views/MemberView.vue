@@ -5,7 +5,7 @@
     import ShowComponent from "@transitions/ShowComponent.vue"
     import MemberService from "@services/MemberService"
 
-    import type { Member } from "@/interfaces/interfaces"
+    import type { Member } from "@interfaces/interfaces"
 
     const service = new MemberService()
     const members: Ref<Member[]> = ref([])
@@ -97,9 +97,9 @@
         class="absolute w-full h-full z-[1001] bg-black opacity-70"
     ></div>
     <MainLayout>
-        <template v-slot:main>
+        <template #main>
             <section
-                class="flex flex-col bg-gray-200 w-[1200px] h-[500px] rounded-xl p-2"
+                class="relative flex flex-col bg-gray-200 w-[1200px] h-[500px] rounded-xl p-2"
             >
                 <div class="border-b-[1px] border-b-secondary h-[60px] w-full">
                     <div class="flex h-full justify-around items-center">
@@ -117,28 +117,24 @@
                 </div>
 
                 <!-- Loading icon -->
-                <div
+                <v-icon
                     v-if="isLoading"
-                    class="flex justify-center items-center w-full h-full"
-                >
-                    <v-icon
-                        name="ri-loader-4-line"
-                        scale="4"
-                        animation="spin"
-                    />
-                </div>
+                    class="absolute inset-0 m-auto w-20 h-20"
+                    name="ri-loader-4-line"
+                    scale="1"
+                    animation="spin"
+                />
                 <!--  -->
 
                 <div
-                    v-else
-                    class="flex flex-col justify-start items-center w-full h-full overflow-y-auto gap-2 px-2 pt-2"
+                    class="grid grid-cols-1 place-content-start w-full h-full overflow-y-auto gap-2 px-2 py-2"
                 >
                     <!-- Member Card -->
                     <div
                         v-for="member in members"
                         :key="member.id"
                         @click="handleMemberCardClick(member.id ?? '')"
-                        class="flex justify-start items-center w-full h-10 bg-primary text-white rounded-full cursor-pointer hover:scale-[1.01] shadow-lg shadow-black/35 transition-transform duration-200 ease-in mt-[.5px]"
+                        class="flex justify-start items-center w-full h-10 bg-primary text-white rounded-full cursor-pointer hover:scale-[1.01] shadow-lg shadow-black/35 transition-transform duration-200 ease-in"
                     >
                         <div class="flex justify-center items-center pl-4">
                             <v-icon name="io-person" scale="1" />
@@ -151,10 +147,11 @@
                 </div>
             </section>
 
+            <!-- Member floating card -->
             <ShowComponent>
                 <div
                     v-if="isMemberCardVisible"
-                    class="flex flex-col justify-start items-center absolute bg-primary w-[500px] h-[500px] text-white rounded-md z-[1000]"
+                    class="absolute top-20 flex flex-col justify-start items-center bg-primary w-[500px] h-[300px] text-white rounded-md z-[1000]"
                 >
                     <div
                         class="flex justify-between w-full h-14 border-b-2 border-gray-200 p-2"
@@ -187,6 +184,7 @@
                     <h1>Email: {{ member.email }}</h1>
                 </div>
             </ShowComponent>
+            <!-- -------------------- -->
 
             <ShowComponent>
                 <MemberForm
