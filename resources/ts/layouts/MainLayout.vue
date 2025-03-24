@@ -6,7 +6,7 @@
     <header class="w-full h-[10vh]">
         <Navbar />
     </header>
-    <main class="flex justify-center items-center w-full h-[90vh]">
+    <main class="flex justify-center items-center w-full h-[90vh] dark:bg-dark">
         <slot name="main"></slot>
     </main>
 </template>

@@ -92,7 +92,7 @@
 
         <div class="flex justify-end w-[90%] mb-6">
             <button
-                class="bg-green-600 hover:bg-green-700 text-1xl text-white rounded-md p-2 mr-4 w-36"
+                class="text-white bg-green-600 hover:bg-green-700 transition-color duration-200 ease-in rounded-md p-2 mr-4 w-36"
                 type="submit"
             >
                 Guardar

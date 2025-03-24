@@ -107,7 +107,7 @@
                             Miembros existentes
                         </h1>
                         <button
-                            class="flex justify-center bg-green-600 hover:bg-green-700 text-white rounded-md p-2 gap-1"
+                            class="flex justify-center text-white bg-green-600 hover:bg-green-700 transition-color duration-200 ease-in rounded-md p-2 gap-1"
                             @click="showForm(false)"
                         >
                             Nuevo registro
@@ -161,13 +161,13 @@
                     >
                         <div class="flex gap-2">
                             <button
-                                class="w-[40px] h-[40px] bg-blue-500 hover:bg-blue-600 rounded-sm"
+                                class="w-[40px] h-[40px] bg-blue-500 hover:bg-blue-600 transition-color duration-200 ease-in rounded-sm"
                                 @click="handleEditMember"
                             >
                                 <v-icon name="md-modeeditoutline" scale="1.5" />
                             </button>
                             <button
-                                class="w-[40px] h-[40px] bg-red-500 hover:bg-red-600 rounded-sm"
+                                class="w-[40px] h-[40px] bg-red-500 hover:bg-red-600 transition-color duration-200 ease-in rounded-sm"
                                 @click="handleDeleteMember(member.id ?? '')"
                             >
                                 <v-icon name="fa-trash" scale="1.5" />

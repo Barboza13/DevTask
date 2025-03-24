@@ -6,10 +6,6 @@
     import TaskService from "@services/TaskService"
     import MemberService from "@services/MemberService"
 
-    import homeProjectIcon from "@icons/home-project-icon.svg"
-    import homeTaskIcon from "@icons/home-task-icon.svg"
-    import homeMemberIcon from "@icons/home-member-icon.svg"
-
     import type { Ref } from "vue"
 
     const projectService = new ProjectService()

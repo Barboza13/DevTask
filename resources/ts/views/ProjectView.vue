@@ -148,7 +148,7 @@
                             </select>
                         </div>
                         <button
-                            class="flex justify-center bg-green-600 hover:bg-green-700 text-white rounded-md p-2 gap-1"
+                            class="flex justify-center text-white bg-green-600 hover:bg-green-700 transition-color duration-200 ease-in rounded-md p-2 gap-1"
                             @click="showProjectForm(false)"
                         >
                             Nuevo registro
@@ -185,32 +185,32 @@
             <ShowComponent>
                 <div
                     v-if="isProjectCardVisible"
-                    class="flex flex-col justify-start items-center absolute bg-primary w-[500px] h-[300px] text-white rounded-md z-[1000]"
+                    class="flex flex-col justify-start items-center absolute top-20 bg-primary w-[500px] h-[300px] text-white rounded-md z-[1000]"
                 >
                     <div
                         class="flex justify-between w-full h-14 border-b-2 border-gray-200 p-2"
                     >
                         <div class="flex gap-2">
                             <button
-                                class="w-[40px] h-[40px] bg-blue-500 hover:bg-blue-600 rounded-sm"
+                                class="w-[40px] h-[40px] bg-blue-500 hover:bg-blue-600 transition-color duration-200 ease-in rounded-sm"
                                 @click="handleEditProject"
                             >
                                 <v-icon name="md-modeeditoutline" scale="1.5" />
                             </button>
                             <button
-                                class="w-[40px] h-[40px] bg-red-500 hover:bg-red-600 rounded-sm"
+                                class="w-[40px] h-[40px] bg-red-500 hover:bg-red-600 transition-color duration-200 ease-in rounded-sm"
                                 @click="handleDeleteProject(project.id ?? '')"
                             >
                                 <v-icon name="fa-trash" scale="1.5" />
                             </button>
                             <button
-                                class="w-36 h-[40px] bg-green-600 hover:bg-green-700 rounded-sm"
+                                class="w-36 h-[40px] bg-green-600 hover:bg-green-700 transition-color duration-200 ease-in rounded-sm"
                                 @click="showTaskForm(false)"
                             >
                                 Nueva Tarea
                             </button>
                             <button
-                                class="w-36 h-[40px] bg-green-600 hover:bg-green-700 rounded-sm"
+                                class="w-36 h-[40px] bg-green-600 hover:bg-green-700 transition-color duration-200 ease-in rounded-sm"
                                 @click="showAddMemberForm"
                             >
                                 Agregar miembro

@@ -28,7 +28,7 @@
             <h3 class="w-1/2">Registros: {{ props.recordNumber }}</h3>
             <router-link
                 :to="props.link"
-                class="flex justify-evenly items-center w-1/2 h-8 text-white bg-green-500 hover:bg-green-600 rounded-md"
+                class="flex justify-evenly items-center w-1/2 h-8 text-white bg-green-500 hover:bg-green-600 transition-color duration-200 ease-in rounded-md"
             >
                 <span class="text-sm md:text-md">
                     Ver {{ lowerCaseName }}

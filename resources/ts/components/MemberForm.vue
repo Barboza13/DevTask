@@ -78,7 +78,7 @@
 
 <template>
     <form
-        class="flex flex-col justify-start items-center absolute bg-primary w-[500px] h-[500px] text-white rounded-md z-[1002]"
+        class="flex flex-col justify-start items-center absolute top-10 bg-primary w-[500px] h-[500px] text-white rounded-md z-[1002]"
         @submit="handleSubmit"
     >
         <div class="flex justify-end w-full p-2">
@@ -135,14 +135,14 @@
         <div class="flex justify-end w-full">
             <button
                 v-if="props.isUpdate"
-                class="bg-green-600 hover:bg-green-700 text-1xl text-white rounded-md p-2 mr-4 w-36"
+                class="text-white bg-green-600 hover:bg-green-700 transition-color duration-200 ease-in rounded-md p-2 mr-4 w-36"
                 type="submit"
             >
                 Actualizar
             </button>
             <button
                 v-else
-                class="bg-green-600 hover:bg-green-700 text-1xl text-white rounded-md p-2 mr-4 w-36"
+                class="text-white bg-green-600 hover:bg-green-700 transition-color duration-200 ease-in rounded-md p-2 mr-4 w-36"
                 type="submit"
             >
                 Guardar

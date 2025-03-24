@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-    import { ref, Ref, onMounted, onUnmounted, computed } from "vue"
+    import { ref, Ref, onMounted, onUnmounted } from "vue"
     import MainLayout from "@layouts/MainLayout.vue"
     import TaskForm from "@components/TaskForm.vue"
     import ShowComponent from "@transitions/ShowComponent.vue"
@@ -214,20 +214,20 @@
             <ShowComponent>
                 <div
                     v-if="isTaskCardVisible"
-                    class="flex flex-col justify-start items-center absolute bg-primary w-[500px] h-[300px] text-white rounded-md z-[1000]"
+                    class="flex flex-col justify-start items-center absolute top-20 bg-primary w-[500px] h-[300px] text-white rounded-md z-[1000]"
                 >
                     <div
                         class="flex justify-between w-full h-14 border-b-2 border-gray-200 p-2"
                     >
                         <div class="flex gap-2">
                             <button
-                                class="w-[40px] h-[40px] bg-blue-500 hover:bg-blue-600 rounded-sm"
+                                class="w-[40px] h-[40px] bg-blue-500 hover:bg-blue-600 transition-color duration-200 ease-in rounded-sm"
                                 @click="handleEditTask"
                             >
                                 <v-icon name="md-modeeditoutline" scale="1.5" />
                             </button>
                             <button
-                                class="w-[40px] h-[40px] bg-red-500 hover:bg-red-600 rounded-sm"
+                                class="w-[40px] h-[40px] bg-red-500 hover:bg-red-600 transition-color duration-200 ease-in rounded-sm"
                                 @click="handleDeleteTask(task.id ?? '')"
                             >
                                 <v-icon name="fa-trash" scale="1.5" />
