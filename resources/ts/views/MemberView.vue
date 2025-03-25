@@ -2,6 +2,7 @@
     import { Ref, ref, onMounted, onUnmounted } from "vue"
     import MainLayout from "@layouts/MainLayout.vue"
     import MemberForm from "@components/MemberForm.vue"
+    import DeleteDialog from "@components/DeleteDialog.vue"
     import ShowComponent from "@transitions/ShowComponent.vue"
     import MemberService from "@services/MemberService"
 
@@ -12,6 +13,7 @@
     const isFormVisible: Ref<boolean> = ref(false)
     const isUpdate: Ref<boolean> = ref(false)
     const isMemberCardVisible: Ref<boolean> = ref(false)
+    const isDeleteDialogVisible: Ref<boolean> = ref(false)
     const isLoading: Ref<boolean> = ref(false)
     const member: Ref<Member> = ref({
         id: "",
@@ -65,6 +67,9 @@
         showMemberCard()
     }
 
+    const changeDeleteDialogVisibility = () =>
+        (isDeleteDialogVisible.value = !isDeleteDialogVisible.value)
+
     const handleDeleteMember = (id: string): void => {
         service
             .deleteMember(id)
@@ -94,6 +99,10 @@
     ></div>
     <div
         v-if="isFormVisible"
+        class="absolute w-full h-full z-[1001] bg-black opacity-70"
+    ></div>
+    <div
+        v-if="isDeleteDialogVisible"
         class="absolute w-full h-full z-[1001] bg-black opacity-70"
     ></div>
     <MainLayout>
@@ -165,7 +174,7 @@
                             </button>
                             <button
                                 class="w-[40px] h-[40px] bg-red-500 hover:bg-red-600 transition-color duration-200 ease-in rounded-sm"
-                                @click="handleDeleteMember(member.id ?? '')"
+                                @click="changeDeleteDialogVisibility"
                             >
                                 <v-icon name="fa-trash" scale="1.5" />
                             </button>
@@ -195,6 +204,16 @@
                     @resetMembers="resetMembers"
                 />
             </ShowComponent>
+
+            <!-- Delete modal -->
+            <ShowComponent>
+                <DeleteDialog
+                    v-if="isDeleteDialogVisible"
+                    @deleteRecord="handleDeleteMember(member.id ?? '')"
+                    @changeDeleteDialogVisibility="changeDeleteDialogVisibility"
+                />
+            </ShowComponent>
+            <!-- ------------ -->
         </template>
     </MainLayout>
 </template>

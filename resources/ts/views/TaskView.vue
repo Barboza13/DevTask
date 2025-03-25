@@ -2,6 +2,7 @@
     import { ref, Ref, onMounted, onUnmounted } from "vue"
     import MainLayout from "@layouts/MainLayout.vue"
     import TaskForm from "@components/TaskForm.vue"
+    import DeleteDialog from "@components/DeleteDialog.vue"
     import ShowComponent from "@transitions/ShowComponent.vue"
     import TaskService from "@services/TaskService"
     import ProjectService from "@services/ProjectService"
@@ -21,6 +22,7 @@
     const isTaskFormVisible: Ref<boolean> = ref(false)
     const isUpdate: Ref<boolean> = ref(false)
     const isTaskCardVisible: Ref<boolean> = ref(false)
+    const isDeleteDialogVisible: Ref<boolean> = ref(false)
     const isLoading: Ref<boolean> = ref(false)
     const task: Ref<Task> = ref({
         id: "",
@@ -42,6 +44,7 @@
                 tasks.value = service.getTasks()
             })
         } else {
+            // If a project filter is applied, it will only restart tasks from that project.
             await service.fetchTasksByProjectId(projectId).then(() => {
                 tasks.value = service.getTasks()
             })
@@ -89,6 +92,9 @@
         showTaskCard()
     }
 
+    const changeDeleteDialogVisibility = () =>
+        (isDeleteDialogVisible.value = !isDeleteDialogVisible.value)
+
     const handleDeleteTask = (id: string): void => {
         service
             .deleteTask(id)
@@ -132,6 +138,10 @@
     ></div>
     <div
         v-if="isTaskFormVisible"
+        class="absolute w-full h-full z-[1001] bg-black opacity-70"
+    ></div>
+    <div
+        v-if="isDeleteDialogVisible"
         class="absolute w-full h-full z-[1001] bg-black opacity-70"
     ></div>
     <MainLayout>
@@ -224,7 +234,7 @@
                             </button>
                             <button
                                 class="w-[40px] h-[40px] bg-red-500 hover:bg-red-600 transition-color duration-200 ease-in rounded-sm"
-                                @click="handleDeleteTask(task.id ?? '')"
+                                @click="changeDeleteDialogVisibility"
                             >
                                 <v-icon name="fa-trash" scale="1.5" />
                             </button>
@@ -269,6 +279,16 @@
                     @resetTasks="resetTasks"
                 />
             </ShowComponent>
+
+            <!-- Delete modal -->
+            <ShowComponent>
+                <DeleteDialog
+                    v-if="isDeleteDialogVisible"
+                    @deleteRecord="handleDeleteTask(task.id ?? '')"
+                    @changeDeleteDialogVisibility="changeDeleteDialogVisibility"
+                />
+            </ShowComponent>
+            <!-- ------------ -->
         </template>
     </MainLayout>
 </template>
