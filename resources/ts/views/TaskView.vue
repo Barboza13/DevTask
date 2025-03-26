@@ -280,7 +280,7 @@
                 />
             </ShowComponent>
 
-            <!-- Delete modal -->
+            <!-- Delete dialog -->
             <ShowComponent>
                 <DeleteDialog
                     v-if="isDeleteDialogVisible"

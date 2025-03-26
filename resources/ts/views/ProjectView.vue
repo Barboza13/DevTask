@@ -6,6 +6,7 @@
     import ProjectForm from "@components/ProjectForm.vue"
     import TaskForm from "@components/TaskForm.vue"
     import AddMemberForm from "@components/AddMemberForm.vue"
+    import DeleteDialog from "@components/DeleteDialog.vue"
     import ShowComponent from "@transitions/ShowComponent.vue"
     import ProjectService from "@services/ProjectService"
     import { useProjectStore } from "@stores/projectStore"
@@ -21,6 +22,7 @@
     const isUpdate: Ref<boolean> = ref(false)
     const seeBy: Ref<string> = ref(store.typeProjectView)
     const isProjectCardVisible: Ref<boolean> = ref(false)
+    const isDeleteDialogVisible: Ref<boolean> = ref(false)
     const isLoading: Ref<boolean> = ref(false)
     const project: Ref<Project> = ref({
         id: "",
@@ -85,6 +87,9 @@
         showProjectCard()
     }
 
+    const changeDeleteDialogVisibility = (): boolean =>
+        (isDeleteDialogVisible.value = !isDeleteDialogVisible.value)
+
     const handleDeleteProject = (id: string): void => {
         service
             .deleteProject(id)
@@ -122,6 +127,10 @@
     ></div>
     <div
         v-if="isTaskFormVisible"
+        class="absolute w-full h-full z-[1001] bg-black opacity-70"
+    ></div>
+    <div
+        v-if="isDeleteDialogVisible"
         class="absolute w-full h-full z-[1001] bg-black opacity-70"
     ></div>
     <MainLayout>
@@ -198,7 +207,7 @@
                             </button>
                             <button
                                 class="w-[40px] h-[40px] bg-red-500 hover:bg-red-600 transition-color duration-200 ease-in rounded-sm"
-                                @click="handleDeleteProject(project.id ?? '')"
+                                @click="changeDeleteDialogVisibility"
                             >
                                 <v-icon name="fa-trash" scale="1.5" />
                             </button>
@@ -274,6 +283,16 @@
                     @close="hideTaskForm"
                 />
             </ShowComponent>
+
+            <!-- Delete dialog -->
+            <ShowComponent>
+                <DeleteDialog
+                    v-if="isDeleteDialogVisible"
+                    @deleteRecord="handleDeleteProject(project.id ?? '')"
+                    @changeDeleteDialogVisibility="changeDeleteDialogVisibility"
+                />
+            </ShowComponent>
+            <!-- ------------ -->
         </template>
     </MainLayout>
 </template>

@@ -19,7 +19,7 @@
 
 <template>
     <div
-        class="flex flex-col justify-between items-center w-3/4 h-28 bg-gray-200 shadow-lg shadow-black/35 rounded-md p-4"
+        class="flex flex-col justify-between items-center w-3/4 h-28 bg-gray-200 shadow-lg shadow-black/35 dark:shadow-gray-200/35 rounded-md p-4"
     >
         <div class="flex justify-start items-center w-full gap-2">
             <h1 class="text-2xl">{{ props.recordName }}</h1>
