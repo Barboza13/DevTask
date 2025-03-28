@@ -12,7 +12,11 @@
         },
     })
 
-    const emit = defineEmits(["close"])
+    const emit = defineEmits([
+        "close",
+        "showMessageDialog",
+        "hideMessageDialog",
+    ])
 
     const service = new MemberService()
     const serviceProject = new ProjectService()
@@ -37,10 +41,10 @@
             )
             .then((data) => {
                 if (data) {
-                    message.value = data.message
+                    emit("showMessageDialog", data.message)
                 }
 
-                setTimeout(() => (message.value = ""), 3000)
+                setTimeout(() => emit("hideMessageDialog"), 3000)
 
                 selectMemberId.value = ""
             })

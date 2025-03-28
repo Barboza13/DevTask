@@ -3,7 +3,9 @@
     import MainLayout from "@layouts/MainLayout.vue"
     import MemberForm from "@components/MemberForm.vue"
     import DeleteDialog from "@components/DeleteDialog.vue"
+    import MessageDialog from "@components/MessageDialog.vue"
     import ShowComponent from "@transitions/ShowComponent.vue"
+    import ShowMessageComponent from "@transitions/ShowMessageComponent.vue"
     import MemberService from "@services/MemberService"
 
     import type { Member } from "@interfaces/interfaces"
@@ -14,6 +16,8 @@
     const isUpdate: Ref<boolean> = ref(false)
     const isMemberCardVisible: Ref<boolean> = ref(false)
     const isDeleteDialogVisible: Ref<boolean> = ref(false)
+    const isMessageDialogVisible: Ref<boolean> = ref(false)
+    const dialogMessage: Ref<string> = ref("")
     const isLoading: Ref<boolean> = ref(false)
     const member: Ref<Member> = ref({
         id: "",
@@ -70,13 +74,25 @@
     const changeDeleteDialogVisibility = () =>
         (isDeleteDialogVisible.value = !isDeleteDialogVisible.value)
 
+    const showMessageDialog = (message: string): void => {
+        if (message === "") message = "¡Evento desconocido!"
+
+        dialogMessage.value = message
+        isMessageDialogVisible.value = true
+    }
+
+    const hideMessageDialog = (): boolean =>
+        (isMessageDialogVisible.value = false)
+
     const handleDeleteMember = (id: string): void => {
         service
             .deleteMember(id)
-            .then(async (data) => {
+            .then((data) => {
                 if (data) {
-                    alert(data.message)
+                    showMessageDialog(data.message)
                 }
+
+                setTimeout(() => hideMessageDialog(), 3000)
 
                 resetMembers()
                 hideMemberCard()
@@ -202,6 +218,8 @@
                     :member="member"
                     @close="hideForm"
                     @resetMembers="resetMembers"
+                    @showMessageDialog="showMessageDialog"
+                    @hideMessageDialog="hideMessageDialog"
                 />
             </ShowComponent>
 
@@ -214,6 +232,15 @@
                 />
             </ShowComponent>
             <!-- ------------ -->
+
+            <!-- Message dialog -->
+            <ShowMessageComponent>
+                <MessageDialog
+                    v-show="isMessageDialogVisible"
+                    :message="dialogMessage"
+                />
+            </ShowMessageComponent>
+            <!-- -------------- -->
         </template>
     </MainLayout>
 </template>

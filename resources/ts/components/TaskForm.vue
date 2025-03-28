@@ -20,7 +20,12 @@
         },
     })
 
-    const emit = defineEmits(["close", "resetTasks"])
+    const emit = defineEmits([
+        "close",
+        "resetTasks",
+        "showMessageDialog",
+        "hideMessageDialog",
+    ])
 
     const service = new TaskService()
     const serviceProject = new ProjectService()
@@ -71,10 +76,11 @@
                 .updateTask(task, props.task?.id ?? "")
                 .then((data) => {
                     if (data) {
-                        message.value = data.message
+                        emit("showMessageDialog", data.message)
                     }
 
-                    setTimeout(() => (message.value = ""), 3000)
+                    setTimeout(() => emit("hideMessageDialog"), 3000)
+
                     emit("resetTasks")
                 })
                 .catch((error) => {
@@ -90,10 +96,10 @@
                 .saveTask(task)
                 .then((data) => {
                     if (data) {
-                        message.value = data.message
+                        emit("showMessageDialog", data.message)
                     }
 
-                    setTimeout(() => (message.value = ""), 3000)
+                    setTimeout(() => emit("hideMessageDialog"), 3000)
 
                     title.value = ""
                     deadline.value = ""

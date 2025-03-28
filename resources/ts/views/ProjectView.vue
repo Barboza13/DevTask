@@ -7,7 +7,9 @@
     import TaskForm from "@components/TaskForm.vue"
     import AddMemberForm from "@components/AddMemberForm.vue"
     import DeleteDialog from "@components/DeleteDialog.vue"
+    import MessageDialog from "@components/MessageDialog.vue"
     import ShowComponent from "@transitions/ShowComponent.vue"
+    import ShowMessageComponent from "@transitions/ShowMessageComponent.vue"
     import ProjectService from "@services/ProjectService"
     import { useProjectStore } from "@stores/projectStore"
 
@@ -23,6 +25,8 @@
     const seeBy: Ref<string> = ref(store.typeProjectView)
     const isProjectCardVisible: Ref<boolean> = ref(false)
     const isDeleteDialogVisible: Ref<boolean> = ref(false)
+    const isMessageDialogVisible: Ref<boolean> = ref(false)
+    const dialogMessage: Ref<string> = ref("")
     const isLoading: Ref<boolean> = ref(false)
     const project: Ref<Project> = ref({
         id: "",
@@ -90,13 +94,25 @@
     const changeDeleteDialogVisibility = (): boolean =>
         (isDeleteDialogVisible.value = !isDeleteDialogVisible.value)
 
+    const showMessageDialog = (message: string): void => {
+        if (message === "") message = "¡Evento desconocido!"
+
+        dialogMessage.value = message
+        isMessageDialogVisible.value = true
+    }
+
+    const hideMessageDialog = (): boolean =>
+        (isMessageDialogVisible.value = false)
+
     const handleDeleteProject = (id: string): void => {
         service
             .deleteProject(id)
             .then(async (data) => {
                 if (data) {
-                    alert(data.message)
+                    showMessageDialog(data.message)
                 }
+
+                setTimeout(() => hideMessageDialog(), 3000)
 
                 resetProjects()
                 hideProjectCard()
@@ -257,6 +273,7 @@
                 </div>
             </ShowComponent>
 
+            <!-- Project form -->
             <ShowComponent>
                 <ProjectForm
                     v-if="isProjectFormVisible"
@@ -264,14 +281,19 @@
                     :project="project"
                     @close="hideProjectForm"
                     @resetProjects="resetProjects"
+                    @showMessageDialog="showMessageDialog"
+                    @hideMessageDialog="hideMessageDialog"
                 />
             </ShowComponent>
+            <!-- ------------ -->
 
             <ShowComponent>
                 <AddMemberForm
                     v-if="isAddMemberFormVisible"
                     :project_id="parseInt(project.id ?? '0')"
                     @close="hideAddMemberForm"
+                    @showMessageDialog="showMessageDialog"
+                    @hideMessageDialog="hideMessageDialog"
                 />
             </ShowComponent>
 
@@ -281,6 +303,8 @@
                     :isUpdate="isUpdate"
                     :project_id="parseInt(project.id ?? '0')"
                     @close="hideTaskForm"
+                    @showMessageDialog="showMessageDialog"
+                    @hideMessageDialog="hideMessageDialog"
                 />
             </ShowComponent>
 
@@ -293,6 +317,15 @@
                 />
             </ShowComponent>
             <!-- ------------ -->
+
+            <!-- Message dialog -->
+            <ShowMessageComponent>
+                <MessageDialog
+                    v-show="isMessageDialogVisible"
+                    :message="dialogMessage"
+                />
+            </ShowMessageComponent>
+            <!-- -------------- -->
         </template>
     </MainLayout>
 </template>

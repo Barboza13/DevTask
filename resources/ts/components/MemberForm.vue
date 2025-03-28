@@ -2,7 +2,7 @@
     import { Ref, ref, PropType } from "vue"
     import MemberService from "@services/MemberService"
 
-    import type { Member } from "@/interfaces/interfaces"
+    import type { Member } from "@interfaces/interfaces"
 
     const props = defineProps({
         isUpdate: {
@@ -15,7 +15,12 @@
         },
     })
 
-    const emit = defineEmits(["close", "resetMembers"])
+    const emit = defineEmits([
+        "close",
+        "resetMembers",
+        "showMessageDialog",
+        "hideMessageDialog",
+    ])
 
     const service = new MemberService()
     const name: Ref<string> = ref("")
@@ -43,10 +48,10 @@
                 .updateMember(member, props.member?.id ?? "")
                 .then((data) => {
                     if (data) {
-                        message.value = data.message
+                        emit("showMessageDialog", data.message)
                     }
 
-                    setTimeout(() => (message.value = ""), 3000)
+                    setTimeout(() => emit("hideMessageDialog"), 3000)
 
                     emit("resetMembers")
                 })
@@ -56,12 +61,12 @@
         } else {
             service
                 .saveMember(member)
-                .then(async (data) => {
+                .then((data) => {
                     if (data) {
-                        message.value = data.message
+                        emit("showMessageDialog", data.message)
                     }
 
-                    setTimeout(() => (message.value = ""), 3000)
+                    setTimeout(() => emit("hideMessageDialog"), 3000)
 
                     name.value = ""
                     last_name.value = ""

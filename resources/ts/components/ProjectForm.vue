@@ -15,7 +15,12 @@
         },
     })
 
-    const emit = defineEmits(["close", "resetProjects"])
+    const emit = defineEmits([
+        "close",
+        "resetProjects",
+        "showMessageDialog",
+        "hideMessageDialog",
+    ])
 
     const service = new ProjectService()
     const name: Ref<string> = ref("")
@@ -45,10 +50,10 @@
                 .updateProject(project, props.project?.id ?? "")
                 .then((data) => {
                     if (data) {
-                        message.value = data.message
+                        emit("showMessageDialog", data.message)
                     }
 
-                    setTimeout(() => (message.value = ""), 3000)
+                    setTimeout(() => emit("hideMessageDialog"), 3000)
 
                     emit("resetProjects")
                 })
@@ -60,10 +65,10 @@
                 .saveProject(project)
                 .then((data) => {
                     if (data) {
-                        message.value = data.message
+                        emit("showMessageDialog", data.message)
                     }
 
-                    setTimeout(() => (message.value = ""), 3000)
+                    setTimeout(() => emit("hideMessageDialog"), 3000)
 
                     name.value = ""
                     deadline.value = ""
