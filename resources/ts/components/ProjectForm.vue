@@ -26,15 +26,12 @@
     const name: Ref<string> = ref("")
     const description: Ref<string> = ref("")
     const deadline: Ref<string> = ref("")
-    const message: Ref<string> = ref("")
 
     if (props.isUpdate) {
         name.value = props.project?.name ?? ""
         description.value = props.project?.description ?? ""
         deadline.value = props.project?.deadline ?? ""
     }
-
-    const closeForm = (): void => emit("close")
 
     const handleSubmit = (event: Event): void => {
         event.preventDefault()
@@ -56,6 +53,7 @@
                     setTimeout(() => emit("hideMessageDialog"), 3000)
 
                     emit("resetProjects")
+                    emit("close")
                 })
                 .catch((error) => {
                     console.error(error)
@@ -93,15 +91,11 @@
                 class="cursor-pointer"
                 name="io-close"
                 scale="1.5"
-                @click="closeForm"
+                @click="emit('close')"
             />
         </div>
         <h1 v-if="props.isUpdate" class="text-3xl mb-8">Editar proyecto</h1>
         <h1 v-else="props.isUpdate" class="text-3xl mb-8">Nuevo proyecto</h1>
-
-        <p v-if="message" class="text-white">
-            {{ message }}
-        </p>
 
         <div class="flex flex-col w-[90%] mb-6">
             <label class="mb-2" for="name">Nombre del proyecto</label>

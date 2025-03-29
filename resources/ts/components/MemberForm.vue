@@ -26,7 +26,6 @@
     const name: Ref<string> = ref("")
     const last_name: Ref<string> = ref("")
     const email: Ref<string> = ref("")
-    const message: Ref<string> = ref("")
 
     if (props.isUpdate) {
         name.value = props.member?.name ?? ""
@@ -54,6 +53,7 @@
                     setTimeout(() => emit("hideMessageDialog"), 3000)
 
                     emit("resetMembers")
+                    emit("close")
                 })
                 .catch((error) => {
                     console.error(error)
@@ -96,10 +96,6 @@
         </div>
         <h1 v-if="props.isUpdate" class="text-3xl mb-8">Editar miembro</h1>
         <h1 v-else class="text-3xl mb-8">Nuevo miembro</h1>
-
-        <p v-if="message" class="text-white">
-            {{ message }}
-        </p>
 
         <div class="flex flex-col w-[90%] mb-6">
             <label class="mb-2" for="name">Nombre</label>

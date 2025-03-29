@@ -31,13 +31,11 @@
     const serviceProject = new ProjectService()
     const tasks: Ref<Task[]> = ref([])
     const projectMembers: Ref<MemberName[]> = ref([])
-
     const title: Ref<string> = ref("")
     const description: Ref<string> = ref("")
     const deadline: Ref<string> = ref("")
     const status: Ref<boolean> = ref(false)
     const memberSelect: Ref<string> = ref("")
-    const message: Ref<string> = ref("")
 
     if (props.isUpdate) {
         const boolean = props.task?.status === 1 ? true : false
@@ -56,8 +54,6 @@
         await serviceProject.fetchProjectMembers(props.project_id.toString())
         projectMembers.value = serviceProject.getProjectMembers()
     })
-
-    const closeForm = (): void => emit("close")
 
     const handleSubmit = (event: Event): void => {
         event.preventDefault()
@@ -82,6 +78,7 @@
                     setTimeout(() => emit("hideMessageDialog"), 3000)
 
                     emit("resetTasks")
+                    emit("close")
                 })
                 .catch((error) => {
                     console.error(error)
@@ -123,15 +120,11 @@
                 class="cursor-pointer"
                 name="io-close"
                 scale="1.5"
-                @click="closeForm"
+                @click="emit('close')"
             />
         </div>
         <h1 v-if="props.isUpdate" class="text-3xl mb-5">Editar Tarea</h1>
         <h1 v-else="props.isUpdate" class="text-3xl mb-5">Nueva Tarea</h1>
-
-        <p v-if="message" class="text-white">
-            {{ message }}
-        </p>
 
         <section class="flex justify-center items-center w-full h-[380px]">
             <div class="flex flex-col justify-center items-center w-1/2 h-full">
