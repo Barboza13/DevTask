@@ -203,30 +203,26 @@
                 <!--  -->
 
                 <div
-                    class="grid grid-cols-6 place-content-start w-full h-full overflow-y-auto gap-2 px-4"
+                    class="grid grid-cols-5 place-content-start place-items-center w-full h-full overflow-y-auto gap-2 pt-2"
                 >
                     <!-- Tasks Cards -->
                     <div
                         v-for="task in tasks"
                         :key="task.id"
                         @click="handleTaskCardClick(task.id ?? '')"
-                        class="flex justify-center items-center w-44 h-32 bg-primary rounded-lg cursor-pointer hover:scale-105 shadow-lg shadow-black/35 transition-transform duration-200 ease-in mt-2"
+                        class="flex justify-center items-center w-52 h-24 bg-gray-200 text-secondary rounded-lg cursor-pointer hover:scale-105 shadow-lg shadow-black/15 transition-transform duration-200 ease-in"
                     >
                         <div
                             :class="[
-                                task.status ? 'text-blue-400' : 'text-white',
-                                'flex flex-col justify-evenly items-center w-full h-full px-1',
+                                task.status ? 'bg-green-500' : 'bg-cyan-500',
+                                'w-2 h-full rounded-l-md',
                             ]"
+                        ></div>
+                        <div
+                            class="flex justify-start items-center w-full h-full"
                         >
-                            <div
-                                class="flex justify-center items-center w-full"
-                            >
-                                <v-icon name="fa-file-code" scale="1.5" />
-                                <h2 class="text-lg">{{ task.project.name }}</h2>
-                            </div>
-                            <h3 class="text-sm text-center">
-                                {{ task.title }}
-                            </h3>
+                            <v-icon name="fa-file-code" scale="2" />
+                            <h2 class="text-sm">{{ task.title }}</h2>
                         </div>
                     </div>
                     <!-- ----------- -->
