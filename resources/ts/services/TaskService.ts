@@ -69,7 +69,7 @@ class TaskService {
         }
     }
 
-    async saveTask(task: Task): Promise<TaskResponse | null> {
+    async saveTask(task: Task): Promise<TaskResponse> {
         try {
             const response = await fetch("/api/tasks", {
                 method: "POST",
@@ -81,21 +81,22 @@ class TaskService {
 
             if (!response.ok) {
                 const errorData = await response.json()
-                console.error(`Error: ${errorData.message}`)
-                return null
+                throw new Error(errorData.message)
             }
 
             const json: TaskResponse = await response.json()
 
             return json
         } catch (error) {
-            console.error(`Error al guardar la tarea: ${error}`)
-            return null
+            return Promise.reject(error)
         }
     }
 
-    async updateTask(task: Task, id: string): Promise<TaskResponse | null> {
-        if (!id) return null
+    async updateTask(
+        task: Task,
+        id: string,
+    ): Promise<TaskResponse | undefined> {
+        if (!id) return
 
         try {
             const response = await fetch(`/api/tasks/${id}`, {
@@ -108,16 +109,14 @@ class TaskService {
 
             if (!response.ok) {
                 const errorData = await response.json()
-                console.error(`Error: ${errorData.message}`)
-                return null
+                return Promise.reject(errorData)
             }
 
             const json: TaskResponse = await response.json()
 
             return json
         } catch (error) {
-            console.error(`Error al actualizar la tarea: ${error}`)
-            return null
+            return Promise.reject(error)
         }
     }
 

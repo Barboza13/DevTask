@@ -52,6 +52,8 @@ export interface MemberNameResponse {
 }
 
 //Tasks types.
+type TaskStatus = "in_progress" | "finished" | "expired"
+
 export interface Task {
     id?: string
     member_id: string
@@ -59,7 +61,7 @@ export interface Task {
     title: string
     description: string
     deadline: string
-    status: boolean | number
+    status: TaskStatus
     member: Member
     project: Project
 }

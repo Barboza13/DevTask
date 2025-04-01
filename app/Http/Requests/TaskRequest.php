@@ -27,7 +27,7 @@ class TaskRequest extends FormRequest
             "title" => "required|string|max:255",
             "description" => "required|string",
             "deadline" => "required|date",
-            "status" => "boolean",
+            "status" => "required|string",
         ];
     }
 }

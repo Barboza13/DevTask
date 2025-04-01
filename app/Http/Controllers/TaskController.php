@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TaskRequest;
 use App\Models\Task;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -28,8 +29,17 @@ class TaskController extends Controller
      */
     public function store(TaskRequest $request): JsonResponse
     {
+        $current_date = Carbon::now()->toDateString(); // Get current date in 'Y-m-d' format.
+        $validated = $request->validated();
+
+        if ($validated['deadline'] < $current_date) {
+            return response()->json([
+                "message" => "¡La fecha de entrega no puede ser mayor a la fecha actual!",
+            ], 422);
+        }
+
         try {
-            $task = Task::create($request->validated());
+            $task = Task::create($validated);
 
             return response()->json([
                 "task" => $task,
@@ -59,7 +69,7 @@ class TaskController extends Controller
                 "task" => $task,
                 "message" => ""
             ], 200);
-        } catch(ModelNotFoundException $e) {
+        } catch (ModelNotFoundException $e) {
             return response()->json(["message" => "¡Tarea no encontrada!"], 404);
         } catch (Exception $e) {
             Log::error("Error: " . $e->getMessage());
@@ -79,15 +89,24 @@ class TaskController extends Controller
      */
     public function update(TaskRequest $request, string $id): JsonResponse
     {
+        $current_date = Carbon::now()->toDateString(); // Get current date in 'Y-m-d' format.
+        $validated = $request->validated();
+
+        if ($validated['deadline'] < $current_date) {
+            return response()->json([
+                "message" => "¡La fecha de entrega no puede ser mayor a la fecha actual!",
+            ], 422);
+        }
+
         try {
             $task = Task::findOrFail($id);
-            $task->update($request->validated());
+            $task->update($validated);
 
             return response()->json([
                 "task" => $task,
                 "message" => "¡Tarea actualizada exitosamente!"
             ], 200);
-        } catch(ModelNotFoundException $e) {
+        } catch (ModelNotFoundException $e) {
             return response()->json(["message" => "¡Tarea no encontrada!"], 404);
         } catch (Exception $e) {
             Log::error("Error: " . $e->getMessage());
@@ -113,9 +132,9 @@ class TaskController extends Controller
             return response()->json([
                 "message" => "¡Tarea eliminada exitosamente!",
             ], 200);
-        } catch(ModelNotFoundException $e) {
+        } catch (ModelNotFoundException $e) {
             return response()->json(["message" => "¡Tarea no encontrada!"], 404);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             Log::error("Error: " . $e->getMessage());
 
             return response()->json([

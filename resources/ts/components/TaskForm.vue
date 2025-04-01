@@ -38,12 +38,10 @@
     const memberSelect: Ref<string> = ref("")
 
     if (props.isUpdate) {
-        const boolean = props.task?.status === 1 ? true : false
-
         title.value = props.task?.title ?? ""
         description.value = props.task?.description ?? ""
         deadline.value = props.task?.deadline ?? ""
-        status.value = boolean
+        status.value = props.task?.status == "finished" ? true : false
         memberSelect.value = props.task?.member_id ?? ""
     }
 
@@ -62,7 +60,7 @@
             title: title.value,
             deadline: deadline.value,
             description: description.value,
-            status: status.value,
+            status: status.value ? "finished" : "in_progress",
             project_id: props.project_id.toString(),
             member_id: memberSelect.value.toString(),
         }
@@ -81,7 +79,8 @@
                     emit("close")
                 })
                 .catch((error) => {
-                    console.error(error)
+                    emit("showMessageDialog", error.message)
+                    setTimeout(() => emit("hideMessageDialog"), 3000)
                 })
         } else {
             if (props.project_id.toString() == "") {
@@ -97,14 +96,16 @@
                     }
 
                     setTimeout(() => emit("hideMessageDialog"), 3000)
-
+                })
+                .catch((error) => {
+                    emit("showMessageDialog", error.message)
+                    setTimeout(() => emit("hideMessageDialog"), 3000)
+                })
+                .finally(() => {
                     title.value = ""
                     deadline.value = ""
                     description.value = ""
                     memberSelect.value = ""
-                })
-                .catch((error) => {
-                    console.log(error)
                 })
         }
     }

@@ -214,7 +214,11 @@
                     >
                         <div
                             :class="[
-                                task.status ? 'bg-green-500' : 'bg-cyan-500',
+                                task.status == 'in_progress'
+                                    ? 'bg-gray-500'
+                                    : task.status == 'finished'
+                                      ? 'bg-green-500'
+                                      : 'bg-red-500',
                                 'w-2 h-full rounded-l-md',
                             ]"
                         ></div>
@@ -274,7 +278,11 @@
                         <h1>
                             Estado:
                             {{
-                                task.status == 0 ? "Sin terminar" : "Terminado"
+                                task.status == "in_progress"
+                                    ? "En progreso"
+                                    : task.status == "finished"
+                                      ? "Finalizado"
+                                      : "Vencido"
                             }}
                         </h1>
                     </section>
