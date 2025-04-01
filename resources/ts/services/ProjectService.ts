@@ -139,7 +139,7 @@ class ProjectService {
         }
     }
 
-    async saveProject(project: Project): Promise<ProjectResponse | null> {
+    async saveProject(project: Project): Promise<ProjectResponse> {
         try {
             const response = await fetch("/api/projects", {
                 method: "POST",
@@ -151,16 +151,14 @@ class ProjectService {
 
             if (!response.ok) {
                 const errorData = await response.json()
-                console.error(`Error: ${errorData.message}`)
-                return null
+                return Promise.reject(errorData)
             }
 
             const json: ProjectResponse = await response.json()
 
             return json
         } catch (error) {
-            console.error(`Error al guardar el proyecto: ${error}`)
-            return null
+            return Promise.reject(error)
         }
     }
 
@@ -188,8 +186,8 @@ class ProjectService {
     async updateProject(
         project: Project,
         id: string,
-    ): Promise<ProjectResponse | null> {
-        if (!id) return null
+    ): Promise<ProjectResponse | undefined> {
+        if (!id) return
 
         try {
             const response = await fetch(`/api/projects/${id}`, {
@@ -202,16 +200,14 @@ class ProjectService {
 
             if (!response.ok) {
                 const errorData = await response.json()
-                console.error(`Error: ${errorData.message}`)
-                return null
+                return Promise.reject(errorData)
             }
 
             const json: ProjectResponse = await response.json()
 
             return json
         } catch (error) {
-            console.error(`Error al actualizar el proyecto: ${error}`)
-            return null
+            return Promise.reject(error)
         }
     }
 }

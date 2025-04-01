@@ -34,7 +34,7 @@ class TaskController extends Controller
 
         if ($validated['deadline'] < $current_date) {
             return response()->json([
-                "message" => "¡La fecha de entrega no puede ser mayor a la fecha actual!",
+                "message" => "¡La fecha de entrega no puede ser una fecha pasada!",
             ], 422);
         }
 
@@ -94,7 +94,7 @@ class TaskController extends Controller
 
         if ($validated['deadline'] < $current_date) {
             return response()->json([
-                "message" => "¡La fecha de entrega no puede ser mayor a la fecha actual!",
+                "message" => "¡La fecha de entrega no puede ser una fecha pasada!",
             ], 422);
         }
 

@@ -1,9 +1,12 @@
 //Projects types.
+type ProjectStatus = "in_progress" | "finished" | "expired"
+
 export interface Project {
     id?: string
     name: string
     deadline: string
     description: string
+    status: ProjectStatus
     members: Member[]
 }
 

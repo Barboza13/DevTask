@@ -26,11 +26,13 @@
     const name: Ref<string> = ref("")
     const description: Ref<string> = ref("")
     const deadline: Ref<string> = ref("")
+    const status: Ref<boolean> = ref(false)
 
     if (props.isUpdate) {
         name.value = props.project?.name ?? ""
         description.value = props.project?.description ?? ""
         deadline.value = props.project?.deadline ?? ""
+        status.value = props.project?.status == "finished" ? true : false
     }
 
     const handleSubmit = (event: Event): void => {
@@ -40,6 +42,7 @@
             name: name.value,
             deadline: deadline.value,
             description: description.value,
+            status: status.value ? "finished" : "in_progress",
         }
 
         if (props.isUpdate) {
@@ -56,7 +59,8 @@
                     emit("close")
                 })
                 .catch((error) => {
-                    console.error(error)
+                    emit("showMessageDialog", error.message)
+                    setTimeout(() => emit("hideMessageDialog"), 3000)
                 })
         } else {
             service
@@ -68,14 +72,16 @@
 
                     setTimeout(() => emit("hideMessageDialog"), 3000)
 
-                    name.value = ""
-                    deadline.value = ""
-                    description.value = ""
-
                     emit("resetProjects")
                 })
                 .catch((error) => {
-                    console.log(error)
+                    emit("showMessageDialog", error.message)
+                    setTimeout(() => emit("hideMessageDialog"), 3000)
+                })
+                .finally(() => {
+                    name.value = ""
+                    deadline.value = ""
+                    description.value = ""
                 })
         }
     }
@@ -121,15 +127,41 @@
             ></textarea>
         </div>
 
-        <div class="flex flex-col w-[90%] mb-6">
-            <label class="mb-2" for="deadline">Fecha limite</label>
+        <div class="flex justify-center items-stretch w-[90%] gap-2 mb-6">
+            <div
+                :class="[props.isUpdate ? 'w-1/2' : 'w-full', 'flex flex-col']"
+            >
+                <label class="mb-2" for="deadline">Fecha limite</label>
+                <input
+                    class="w-full h-10 bg-white text-black outline-none p-2 rounded-lg"
+                    type="date"
+                    v-model="deadline"
+                    name="deadline"
+                    id="deadline"
+                    required
+                />
+            </div>
+
+            <div
+                v-if="props.isUpdate"
+                class="flex justify-center items-center w-1/2"
+            >
+                <input
+                    class="w-5 h-5 cursor-pointer mr-2"
+                    type="checkbox"
+                    v-model="status"
+                    name="status"
+                    id="status"
+                />
+                <label for="status">Marcar como completado.</label>
+            </div>
+
             <input
-                class="w-full h-10 bg-white text-black outline-none p-2 rounded-lg"
-                type="date"
-                v-model="deadline"
-                name="deadline"
-                id="deadline"
-                required
+                v-else
+                type="checkbox"
+                name="status"
+                v-model="status"
+                hidden
             />
         </div>
 

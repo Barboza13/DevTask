@@ -20,7 +20,7 @@ class UpdateStatusToExpired extends Command
      *
      * @var string
      */
-    protected $description = 'Update the overdue status of all tasks that pass the due date.';
+    protected $description = 'Update the overdue status of all tasks and projects that pass the due date.';
 
     /**
      * Execute the console command.
@@ -30,11 +30,17 @@ class UpdateStatusToExpired extends Command
         $current_date = Carbon::now();
 
         DB::table('tasks')
-            ->where('deleted_at', '!=', null) // Check if the task is deleted
+            ->where('deleted_at', '=', null) // Check if the task is deleted
             ->where('status', '!=', 'finished')
             ->where('deadline', '<', $current_date)
             ->update(['status' => 'expired']);
 
-        $this->info('All overdue tasks have been updated to expired status.');
+        DB::table('projects')
+            ->where('deleted_at', '=', null) // Check if the task is deleted
+            ->where('status', '!=', 'finished')
+            ->where('deadline', '<', $current_date)
+            ->update(['status' => 'expired']);
+
+        $this->info('All overdue tasks and projects have been updated to expired status.');
     }
 }

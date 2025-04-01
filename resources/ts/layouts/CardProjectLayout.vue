@@ -26,7 +26,11 @@
         >
             <div
                 :class="[
-                    // Project status bar color.
+                    project.status == 'in_progress'
+                        ? 'bg-gray-500'
+                        : project.status == 'finished'
+                          ? 'bg-green-500'
+                          : 'bg-red-500',
                     'w-2 h-full rounded-l-md',
                 ]"
             ></div>

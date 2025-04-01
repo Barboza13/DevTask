@@ -33,6 +33,7 @@
         name: "",
         deadline: "",
         description: "",
+        status: "in_progress",
         members: [],
     })
 
