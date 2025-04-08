@@ -28,17 +28,15 @@
 
     onMounted(async () => {
         isLoading.value = true
-        await service
-            .fetchMembers()
-            .then(() => {
-                members.value = service.getMembers()
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-            .finally(() => {
-                isLoading.value = false
-            })
+
+        try {
+            await service.fetchMembers()
+            members.value = service.getMembers()
+        } catch (error) {
+            console.log(error)
+        } finally {
+            isLoading.value = false
+        }
     })
 
     onUnmounted((): void => service.clearMembers())
@@ -49,8 +47,8 @@
         members.value = service.getMembers()
     }
 
-    const showMemberCard = (): boolean => (isMemberCardVisible.value = true)
-    const hideMemberCard = (): boolean => (isMemberCardVisible.value = false)
+    const changeMemberCardVisibility = (): boolean =>
+        (isMemberCardVisible.value = !isMemberCardVisible.value)
 
     const showForm = (isEdit: boolean): void => {
         isUpdate.value = isEdit
@@ -68,7 +66,7 @@
         }
 
         member.value = memberData
-        showMemberCard()
+        changeMemberCardVisibility()
     }
 
     const changeDeleteDialogVisibility = () =>
@@ -84,26 +82,25 @@
     const hideMessageDialog = (): boolean =>
         (isMessageDialogVisible.value = false)
 
-    const handleDeleteMember = (id: string): void => {
-        service
-            .deleteMember(id)
-            .then((data) => {
-                if (data) {
-                    showMessageDialog(data.message)
-                }
+    const handleDeleteMember = async (id: string): Promise<void> => {
+        try {
+            const response = await service.deleteMember(id)
 
+            if (response) {
+                showMessageDialog(response.message)
                 setTimeout(() => hideMessageDialog(), 3000)
+            }
 
-                resetMembers()
-                hideMemberCard()
-            })
-            .catch((error) => {
-                console.log(error)
-            })
+            resetMembers()
+            changeMemberCardVisibility()
+        } catch (error) {
+            showMessageDialog((error as Error).message)
+            setTimeout(() => hideMessageDialog(), 3000)
+        }
     }
 
     const handleEditMember = (): void => {
-        hideMemberCard()
+        changeMemberCardVisibility()
         showForm(true)
     }
 </script>
@@ -200,7 +197,7 @@
                             class="cursor-pointer"
                             name="io-close"
                             scale="1.5"
-                            @click="hideMemberCard"
+                            @click="changeMemberCardVisibility"
                         />
                     </div>
 

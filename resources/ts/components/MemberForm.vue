@@ -15,7 +15,7 @@
         },
     })
 
-    const emit = defineEmits([
+    const emits = defineEmits([
         "close",
         "resetMembers",
         "showMessageDialog",
@@ -33,7 +33,7 @@
         email.value = props.member?.email ?? ""
     }
 
-    const handleSubmit = (event: Event): void => {
+    const handleSubmit = async (event: Event): Promise<void> => {
         event.preventDefault()
 
         const member: Member = {
@@ -43,40 +43,43 @@
         }
 
         if (props.isUpdate) {
-            service
-                .updateMember(member, props.member?.id ?? "")
-                .then((data) => {
-                    if (data) {
-                        emit("showMessageDialog", data.message)
-                    }
+            try {
+                const response = await service.updateMember(
+                    member,
+                    props.member?.id ?? "",
+                )
 
-                    setTimeout(() => emit("hideMessageDialog"), 3000)
+                if (response) {
+                    emits("showMessageDialog", response.message)
+                }
 
-                    emit("resetMembers")
-                    emit("close")
-                })
-                .catch((error) => {
-                    console.error(error)
-                })
+                setTimeout(() => emits("hideMessageDialog"), 3000)
+
+                emits("resetMembers")
+                emits("close")
+            } catch (error) {
+                emits("showMessageDialog", (error as Error).message)
+                setTimeout(() => emits("hideMessageDialog"), 3000)
+            }
         } else {
-            service
-                .saveMember(member)
-                .then((data) => {
-                    if (data) {
-                        emit("showMessageDialog", data.message)
-                    }
+            try {
+                const response = await service.saveMember(member)
 
-                    setTimeout(() => emit("hideMessageDialog"), 3000)
+                if (response) {
+                    emits("showMessageDialog", response.message)
+                }
 
-                    name.value = ""
-                    last_name.value = ""
-                    email.value = ""
+                setTimeout(() => emits("hideMessageDialog"), 3000)
 
-                    emit("resetMembers")
-                })
-                .catch((error) => {
-                    console.log(error)
-                })
+                emits("resetMembers")
+            } catch (error) {
+                emits("showMessageDialog", (error as Error).message)
+                setTimeout(() => emits("hideMessageDialog"), 3000)
+            } finally {
+                name.value = ""
+                last_name.value = ""
+                email.value = ""
+            }
         }
     }
 </script>
@@ -91,7 +94,7 @@
                 class="cursor-pointer"
                 name="io-close"
                 scale="1.5"
-                @click="emit('close')"
+                @click="emits('close')"
             />
         </div>
         <h1 v-if="props.isUpdate" class="text-3xl mb-8">Editar miembro</h1>

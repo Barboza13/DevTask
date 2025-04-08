@@ -44,44 +44,51 @@
         const projectId: string = projectSelect.value
 
         if (projectId === "") {
-            await service.fetchTasks().then(() => {
+            try {
+                await service.fetchTasks()
                 tasks.value = service.getTasks()
-            })
-        } else {
-            // If a project filter is applied, it will only restart tasks from that project.
-            await service.fetchTasksByProjectId(projectId).then(() => {
-                tasks.value = service.getTasks()
-            })
+            } catch (error) {
+                console.error(error)
+            }
+
+            return
+        }
+
+        // If a project filter is applied, it will only restart tasks from that project.
+        try {
+            await service.fetchTasksByProjectId(projectId)
+            tasks.value = service.getTasks()
+        } catch (error) {
+            console.error(error)
         }
     }
 
     onMounted(async () => {
         isLoading.value = true
-        await service
-            .fetchTasks()
-            .then(() => {
-                tasks.value = service.getTasks()
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-            .finally(() => {
-                isLoading.value = false
-            })
 
-        await projectService.fetchProjectNames()
-        projectNames.value = projectService.getProjectNames()
+        try {
+            await service.fetchTasks()
+            tasks.value = service.getTasks()
+
+            await projectService.fetchProjectNames()
+            projectNames.value = projectService.getProjectNames()
+        } catch (error) {
+            console.error(error)
+        } finally {
+            isLoading.value = false
+        }
     })
 
     onUnmounted(() => service.clearTasks())
 
-    const showTaskCard = (): boolean => (isTaskCardVisible.value = true)
-    const hideTaskCard = (): boolean => (isTaskCardVisible.value = false)
+    const changeTaskCardVisibility = (): boolean =>
+        (isTaskCardVisible.value = !isTaskCardVisible.value)
 
     const showTaskForm = (isEdit: boolean): void => {
         isUpdate.value = isEdit
         isTaskFormVisible.value = true
     }
+
     const hideTaskForm = (): boolean => (isTaskFormVisible.value = false)
 
     const handleTaskCardClick = (id: string): void => {
@@ -93,7 +100,7 @@
         }
 
         task.value = taskData
-        showTaskCard()
+        changeTaskCardVisibility()
     }
 
     const changeDeleteDialogVisibility = () =>
@@ -109,26 +116,25 @@
     const hideMessageDialog = (): boolean =>
         (isMessageDialogVisible.value = false)
 
-    const handleDeleteTask = (id: string): void => {
-        service
-            .deleteTask(id)
-            .then((data) => {
-                if (data) {
-                    showMessageDialog(data.message)
-                }
+    const handleDeleteTask = async (id: string): Promise<void> => {
+        try {
+            const response = await service.deleteTask(id)
 
+            if (response) {
+                showMessageDialog(response.message)
                 setTimeout(() => hideMessageDialog(), 3000)
+            }
 
-                resetTasks()
-                hideTaskCard()
-            })
-            .catch((error) => {
-                console.log(error)
-            })
+            resetTasks()
+            changeTaskCardVisibility()
+        } catch (error) {
+            showMessageDialog((error as Error).message)
+            setTimeout(() => hideMessageDialog(), 3000)
+        }
     }
 
     const handleEditTask = (): void => {
-        hideTaskCard()
+        changeTaskCardVisibility()
         showTaskForm(true)
     }
 
@@ -136,13 +142,21 @@
         const projectId: string = projectSelect.value
 
         if (projectId === "") {
-            await service.fetchTasks().then(() => {
+            try {
+                await service.fetchTasks()
                 tasks.value = service.getTasks()
-            })
-        } else {
-            await service.fetchTasksByProjectId(projectId).then(() => {
-                tasks.value = service.getTasks()
-            })
+            } catch (error) {
+                console.error(error)
+            }
+
+            return
+        }
+
+        try {
+            await service.fetchTasksByProjectId(projectId)
+            tasks.value = service.getTasks()
+        } catch (error) {
+            console.error(error)
         }
     }
 </script>
@@ -260,7 +274,7 @@
                             class="cursor-pointer"
                             name="io-close"
                             scale="1.5"
-                            @click="hideTaskCard"
+                            @click="changeTaskCardVisibility"
                         />
                     </div>
 

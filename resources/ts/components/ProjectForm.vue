@@ -15,7 +15,7 @@
         },
     })
 
-    const emit = defineEmits([
+    const emits = defineEmits([
         "close",
         "resetProjects",
         "showMessageDialog",
@@ -35,7 +35,7 @@
         status.value = props.project?.status == "finished" ? true : false
     }
 
-    const handleSubmit = (event: Event): void => {
+    const handleSubmit = async (event: Event): Promise<void> => {
         event.preventDefault()
 
         const project: Project = {
@@ -43,46 +43,47 @@
             deadline: deadline.value,
             description: description.value,
             status: status.value ? "finished" : "in_progress",
+            members: [],
         }
 
         if (props.isUpdate) {
-            service
-                .updateProject(project, props.project?.id ?? "")
-                .then((data) => {
-                    if (data) {
-                        emit("showMessageDialog", data.message)
-                    }
+            try {
+                const response = await service.updateProject(
+                    project,
+                    props.project?.id ?? "",
+                )
 
-                    setTimeout(() => emit("hideMessageDialog"), 3000)
+                if (response) {
+                    emits("showMessageDialog", response.message)
+                }
 
-                    emit("resetProjects")
-                    emit("close")
-                })
-                .catch((error) => {
-                    emit("showMessageDialog", error.message)
-                    setTimeout(() => emit("hideMessageDialog"), 3000)
-                })
+                setTimeout(() => emits("hideMessageDialog"), 3000)
+
+                emits("resetProjects")
+                emits("close")
+            } catch (error) {
+                emits("showMessageDialog", (error as Error).message)
+                setTimeout(() => emits("hideMessageDialog"), 3000)
+            }
         } else {
-            service
-                .saveProject(project)
-                .then((data) => {
-                    if (data) {
-                        emit("showMessageDialog", data.message)
-                    }
+            try {
+                const response = await service.saveProject(project)
 
-                    setTimeout(() => emit("hideMessageDialog"), 3000)
+                if (response) {
+                    emits("showMessageDialog", response.message)
+                }
 
-                    emit("resetProjects")
-                })
-                .catch((error) => {
-                    emit("showMessageDialog", error.message)
-                    setTimeout(() => emit("hideMessageDialog"), 3000)
-                })
-                .finally(() => {
-                    name.value = ""
-                    deadline.value = ""
-                    description.value = ""
-                })
+                setTimeout(() => emits("hideMessageDialog"), 3000)
+
+                emits("resetProjects")
+            } catch (error) {
+                emits("showMessageDialog", (error as Error).message)
+                setTimeout(() => emits("hideMessageDialog"), 3000)
+            } finally {
+                name.value = ""
+                deadline.value = ""
+                description.value = ""
+            }
         }
     }
 </script>
@@ -97,7 +98,7 @@
                 class="cursor-pointer"
                 name="io-close"
                 scale="1.5"
-                @click="emit('close')"
+                @click="emits('close')"
             />
         </div>
         <h1 v-if="props.isUpdate" class="text-3xl mb-8">Editar proyecto</h1>

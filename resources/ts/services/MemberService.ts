@@ -14,26 +14,52 @@ class MemberService {
         this.membersNames = []
     }
 
+    /**
+     * @description Get all members.
+     * @returns {Member[]} Members.
+     */
     getMembers(): Member[] {
         return this.members
     }
 
+    /**
+     * @description Get specified member.
+     * @param {string} id Member id.
+     * @returns {Member} Member.
+     */
     getMemberById(id: string): Member | undefined {
         return this.members.find((member) => member.id == id)
     }
 
+    /**
+     * @description Get all members names.
+     * @returns {MemberName[]} member names.
+     */
     getMembersNames(): MemberName[] {
         return this.membersNames
     }
 
+    /**
+     * @description Clean members.
+     * @returns {void}
+     */
     clearMembers(): void {
         this.members = []
     }
 
+    /**
+     * @description Clean members names.
+     * @returns {void}
+     */
     clearMembersNames(): void {
         this.membersNames = []
     }
 
+    /**
+     * @description Fetch all members names.
+     * @returns {Promise<void>}
+     * @throws {PromiseRejectedResult} Promise rejected.
+     */
     async fetchMembersNames(): Promise<void> {
         try {
             const response = await fetch("/api/members/members-names", {
@@ -42,7 +68,7 @@ class MemberService {
 
             if (!response.ok) {
                 const errorData = await response.json()
-                console.error(`Error: ${errorData.message}`)
+                return Promise.reject(errorData)
             }
 
             const json: MemberNameResponse = await response.json()
@@ -51,12 +77,15 @@ class MemberService {
                 this.membersNames.push(member),
             )
         } catch (error) {
-            console.error(
-                `Error al obtener los nombres de los miembros: ${error}`,
-            )
+            return Promise.reject(error)
         }
     }
 
+    /**
+     * @description Fetch all members.
+     * @returns {Promise<void>}
+     * @throws {PromiseRejectedResult} Promise rejected.
+     */
     async fetchMembers(): Promise<void> {
         try {
             const response = await fetch("/api/members", {
@@ -65,7 +94,7 @@ class MemberService {
 
             if (!response.ok) {
                 const errorData = await response.json()
-                console.error(`Error: ${errorData.message}`)
+                return Promise.reject(errorData)
             }
 
             const json: MemberResponse = await response.json()
@@ -74,11 +103,17 @@ class MemberService {
                 this.members.push(member)
             })
         } catch (error) {
-            console.error(`Error al obtener los miembros: ${error}`)
+            return Promise.reject(error)
         }
     }
 
-    async saveMember(member: Member): Promise<MemberResponse | null> {
+    /**
+     * @description Save a new member.
+     * @param {Member} member Member.
+     * @returns {Promise<MemberResponse>} Created member or message.
+     * @throws {PromiseRejectedResult} Promise rejected.
+     */
+    async saveMember(member: Member): Promise<MemberResponse> {
         try {
             const response = await fetch("/api/members", {
                 method: "POST",
@@ -90,24 +125,29 @@ class MemberService {
 
             if (!response.ok) {
                 const errorData = await response.json()
-                console.error(`Error: ${errorData.message}`)
-                return null
+                return Promise.reject(errorData)
             }
 
             const json: MemberResponse = await response.json()
 
             return json
         } catch (error) {
-            console.error(`Error al guardar el miembro: ${error}`)
-            return null
+            return Promise.reject(error)
         }
     }
 
+    /**
+     * @description Update a specified member.
+     * @param {Member} member Member.
+     * @param {string} id Member id.
+     * @returns {Promise<MemberResponse | undefined>} Updated member and message or undefined.
+     * @throws {PromiseRejectedResult} Promise rejected.
+     */
     async updateMember(
         member: Member,
         id: string,
-    ): Promise<MemberResponse | null> {
-        if (!id) return null
+    ): Promise<MemberResponse | undefined> {
+        if (!id) return
 
         try {
             const response = await fetch(`/api/members/${id}`, {
@@ -120,20 +160,24 @@ class MemberService {
 
             if (!response.ok) {
                 const errorData = await response.json()
-                console.error(`Error: ${errorData.message}`)
-                return null
+                return Promise.reject(errorData)
             }
 
             const json: MemberResponse = await response.json()
 
             return json
         } catch (error) {
-            console.error(`Error al actualizar el miembro: ${error}`)
-            return null
+            return Promise.reject(error)
         }
     }
 
-    async deleteMember(id: string): Promise<MemberResponse | null> {
+    /**
+     * @description Delete a specified member.
+     * @param {string} id Member id.
+     * @returns {Promise<MemberResponse>} Message.
+     * @throws {PromiseRejectedResult} Promise rejected.
+     */
+    async deleteMember(id: string): Promise<MemberResponse> {
         try {
             const response = await fetch(`/api/members/${id}`, {
                 method: "DELETE",
@@ -141,16 +185,14 @@ class MemberService {
 
             if (!response.ok) {
                 const errorData = await response.json()
-                console.error(`Error: ${errorData.message}`)
-                return null
+                return Promise.reject(errorData)
             }
 
             const json: MemberResponse = await response.json()
 
             return json
         } catch (error) {
-            console.error(`Error al eliminar el miembro: ${error}`)
-            return null
+            return Promise.reject(error)
         }
     }
 }

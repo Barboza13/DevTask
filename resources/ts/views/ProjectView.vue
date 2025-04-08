@@ -45,28 +45,27 @@
 
     onMounted(async () => {
         isLoading.value = true
-        await service
-            .fetchProjects()
-            .then(() => {
-                projects.value = service.getProjects()
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-            .finally(() => {
-                isLoading.value = false
-            })
+
+        try {
+            await service.fetchProjects()
+            projects.value = service.getProjects()
+        } catch (error) {
+            console.log(error)
+        } finally {
+            isLoading.value = false
+        }
     })
 
     onUnmounted(() => service.clearProjects())
 
-    const showProjectCard = (): boolean => (isProjectCardVisible.value = true)
-    const hideProjectCard = (): boolean => (isProjectCardVisible.value = false)
+    const changeProjectCardVisibility = (): boolean =>
+        (isProjectCardVisible.value = !isProjectCardVisible.value)
 
     const showProjectForm = (isEdit: boolean): void => {
         isUpdate.value = isEdit
         isProjectFormVisible.value = true
     }
+
     const hideProjectForm = (): boolean => (isProjectFormVisible.value = false)
 
     const showAddMemberForm = (): boolean =>
@@ -89,7 +88,7 @@
         }
 
         project.value = projectData
-        showProjectCard()
+        changeProjectCardVisibility()
     }
 
     const changeDeleteDialogVisibility = (): boolean =>
@@ -105,26 +104,25 @@
     const hideMessageDialog = (): boolean =>
         (isMessageDialogVisible.value = false)
 
-    const handleDeleteProject = (id: string): void => {
-        service
-            .deleteProject(id)
-            .then(async (data) => {
-                if (data) {
-                    showMessageDialog(data.message)
-                }
+    const handleDeleteProject = async (id: string): Promise<void> => {
+        try {
+            const response = await service.deleteProject(id)
 
+            if (response) {
+                showMessageDialog(response.message)
                 setTimeout(() => hideMessageDialog(), 3000)
+            }
 
-                resetProjects()
-                hideProjectCard()
-            })
-            .catch((error) => {
-                console.log(error)
-            })
+            resetProjects()
+            changeProjectCardVisibility()
+        } catch (error) {
+            showMessageDialog((error as Error).message)
+            setTimeout(() => hideMessageDialog(), 3000)
+        }
     }
 
     const handleEditProject = (): void => {
-        hideProjectCard()
+        changeProjectCardVisibility()
         showProjectForm(true)
     }
 </script>
@@ -246,7 +244,7 @@
                             class="cursor-pointer"
                             name="io-close"
                             scale="1.5"
-                            @click="hideProjectCard"
+                            @click="changeProjectCardVisibility"
                         />
                     </div>
 

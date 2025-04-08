@@ -18,26 +18,52 @@ class ProjectService {
         this.projectNames = []
     }
 
+    /**
+     * @description Get all project names.
+     * @returns {ProjectName[]} Project names.
+     */
     getProjectNames(): ProjectName[] {
         return this.projectNames
     }
 
+    /**
+     * @description Get all project members.
+     * @returns {MemberName[]} Project members.
+     */
     getProjectMembers(): MemberName[] {
         return this.projectMembers
     }
 
+    /**
+     * @description Get all projects.
+     * @returns {Project[]} Projects.
+     */
     getProjects(): Project[] {
         return this.projects
     }
 
+    /**
+     * @description Get specified project.
+     * @param {string} id Project id.
+     * @returns {Project | undefined} Project or undefined.
+     */
     getProjectById(id: string): Project | undefined {
         return this.projects.find((project) => project.id == id)
     }
 
+    /**
+     * @description Clean projects.
+     * @returns {void}
+     */
     clearProjects(): void {
         this.projects = []
     }
 
+    /**
+     * @description Fetch all projects.
+     * @returns {Promise<void>}
+     * @throws {PromiseRejectedResult} Promise rejected.
+     */
     async fetchProjects(): Promise<void> {
         try {
             const response = await fetch("/api/projects", {
@@ -46,7 +72,7 @@ class ProjectService {
 
             if (!response.ok) {
                 const errorData = await response.json()
-                console.error(`Error: ${errorData.message}`)
+                return Promise.reject(errorData)
             }
 
             const json: ProjectResponse = await response.json()
@@ -55,10 +81,16 @@ class ProjectService {
                 this.projects.push(project),
             )
         } catch (error) {
-            console.error(`Error al obtener los proyectos: ${error}`)
+            return Promise.reject(error)
         }
     }
 
+    /**
+     * @description Fetch all project members.
+     * @param {string} id Project id.
+     * @returns {Promise<void>}
+     * @throws {PromiseRejectedResult} Promise rejected.
+     */
     async fetchProjectMembers(id: string): Promise<void> {
         try {
             const response = await fetch(
@@ -70,7 +102,7 @@ class ProjectService {
 
             if (!response.ok) {
                 const errorData = await response.json()
-                console.error(`Error: ${errorData.message}`)
+                return Promise.reject(errorData)
             }
 
             const json: MemberNameResponse = await response.json()
@@ -79,12 +111,15 @@ class ProjectService {
                 this.projectMembers.push(member),
             )
         } catch (error) {
-            console.error(
-                `Error al obtener los miembros del proyecto: ${error}`,
-            )
+            return Promise.reject(error)
         }
     }
 
+    /**
+     * @description Fetch all project names.
+     * @returns {void}
+     * @throws {PromiseRejectedResult} Promise rejected.
+     */
     async fetchProjectNames(): Promise<void> {
         try {
             const response = await fetch("/api/projects/project-names", {
@@ -93,7 +128,7 @@ class ProjectService {
 
             if (!response.ok) {
                 const errorData = await response.json()
-                console.error(`Error: ${errorData.message}`)
+                return Promise.reject(errorData)
             }
 
             const json: ProjectNameResponse = await response.json()
@@ -102,16 +137,21 @@ class ProjectService {
                 this.projectNames.push(project),
             )
         } catch (error) {
-            console.error(
-                `Error al obtener los nombres de los proyectos: ${error}`,
-            )
+            return Promise.reject(error)
         }
     }
 
+    /**
+     * @description Add a new member to project.
+     * @param {string} project_id Project id.
+     * @param {string} member_id Member id.
+     * @returns {Promise<MemberNameResponse>} Added member or message.
+     * @throws {PromiseRejectedResult} Promise rejected.
+     */
     async addMember(
         project_id: string,
         member_id: string,
-    ): Promise<MemberNameResponse | null> {
+    ): Promise<MemberNameResponse> {
         try {
             const response = await fetch(
                 `/api/projects/add-member/${project_id}`,
@@ -126,19 +166,23 @@ class ProjectService {
 
             if (!response.ok) {
                 const errorData = await response.json()
-                console.error(`Error: ${errorData.message}`)
-                return null
+                return Promise.reject(errorData)
             }
 
             const json: MemberNameResponse = await response.json()
 
             return json
         } catch (error) {
-            console.error(error)
-            return null
+            return Promise.reject(error)
         }
     }
 
+    /**
+     * @description Save a new project.
+     * @param {Project} project Project.
+     * @returns {Promise<ProjectResponse>} Created project or message.
+     * @throws {PromiseRejectedResult} Promise rejected.
+     */
     async saveProject(project: Project): Promise<ProjectResponse> {
         try {
             const response = await fetch("/api/projects", {
@@ -162,7 +206,13 @@ class ProjectService {
         }
     }
 
-    async deleteProject(id: string): Promise<ProjectResponse | null> {
+    /**
+     * @description Delete a specified project.
+     * @param {string} id Project id.
+     * @returns {Promise<ProjectResponse>} Message.
+     * @throws {PromiseRejectedResult} Promise rejected.
+     */
+    async deleteProject(id: string): Promise<ProjectResponse> {
         try {
             const response = await fetch(`/api/projects/${id}`, {
                 method: "DELETE",
@@ -170,19 +220,24 @@ class ProjectService {
 
             if (!response.ok) {
                 const errorData = await response.json()
-                console.error(`Error: ${errorData.message}`)
-                return null
+                return Promise.reject(errorData)
             }
 
             const json: ProjectResponse = await response.json()
 
             return json
         } catch (error) {
-            console.error(`Error al eliminar el proyecto: ${error}`)
-            return null
+            return Promise.reject(error)
         }
     }
 
+    /**
+     * @description Update a specified project.
+     * @param {Project} project Project.
+     * @param {string} id Project id.
+     * @returns {Promise<ProjectResponse | undefined>} Updated project and message or undefined.
+     * @throws {PromiseRejectedResult} Promise rejected.
+     */
     async updateProject(
         project: Project,
         id: string,
