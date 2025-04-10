@@ -258,6 +258,16 @@
                     >
                         <h1>Nombre: {{ project.name }}</h1>
                         <h1>Descripcion: {{ project.description }}</h1>
+                        <h1>
+                            Estado:
+                            {{
+                                project.status == "finished"
+                                    ? "Terminado"
+                                    : project.status == "in_progress"
+                                      ? "En progreso"
+                                      : "Expirado"
+                            }}
+                        </h1>
                         <h1>Fecha de entrega: {{ project.deadline }}</h1>
                         <h1>Integrantes:</h1>
                         <ul>

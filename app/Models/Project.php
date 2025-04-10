@@ -17,6 +17,7 @@ class Project extends Model
         "name",
         "description",
         "deadline",
+        "status"
     ];
 
     protected $dates = ["deadline"];

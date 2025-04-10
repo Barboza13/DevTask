@@ -25,6 +25,7 @@ class ProjectRequest extends FormRequest
             "name" => "required|string|max:255",
             "description" => "required|string|max:500",
             "deadline" => "required|date",
+            "status" => "required|string|max:15"
         ];
     }
 }

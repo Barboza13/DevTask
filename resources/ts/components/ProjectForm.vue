@@ -161,6 +161,7 @@
                 v-else
                 type="checkbox"
                 name="status"
+                value="in_progress"
                 v-model="status"
                 hidden
             />
