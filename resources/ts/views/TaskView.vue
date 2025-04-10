@@ -217,10 +217,11 @@
                 <!--  -->
 
                 <div
-                    class="grid grid-cols-5 place-content-start place-items-center w-full h-full overflow-y-auto gap-2 pt-2"
+                    class="relative grid grid-cols-5 place-content-start place-items-center w-full h-full overflow-y-auto gap-2 pt-2"
                 >
                     <!-- Tasks Cards -->
                     <div
+                        v-if="!isLoading && tasks.length > 0"
                         v-for="task in tasks"
                         :key="task.id"
                         @click="handleTaskCardClick(task.id ?? '')"
@@ -244,6 +245,13 @@
                         </div>
                     </div>
                     <!-- ----------- -->
+
+                    <h1
+                        v-else-if="!isLoading"
+                        class="absolute top-1/2 left-1/2 -translate-x-1/2 text-secondary"
+                    >
+                        ¡No hay registros!
+                    </h1>
                 </div>
             </section>
 

@@ -6,6 +6,8 @@
     import ProjectForm from "@components/ProjectForm.vue"
     import TaskForm from "@components/TaskForm.vue"
     import AddMemberForm from "@components/AddMemberForm.vue"
+    import ProjectCardItem from "@components/ProjectCardItem.vue"
+    import ProjectListItem from "@components/ProjectListItem.vue"
     import DeleteDialog from "@components/DeleteDialog.vue"
     import MessageDialog from "@components/MessageDialog.vue"
     import ShowComponent from "@transitions/ShowComponent.vue"
@@ -191,18 +193,21 @@
                 />
                 <!--  -->
 
-                <CardProjectLayout
-                    v-if="seeBy === 'card'"
-                    :projects="projects"
-                    :is-loading="isLoading"
-                    @handleProjectClick="handleProjectClick"
-                />
-                <ListProjectLayout
-                    v-else
-                    :projects="projects"
-                    :is-loading="isLoading"
-                    @handleProjectClick="handleProjectClick"
-                />
+                <CardProjectLayout v-show="seeBy === 'card'">
+                    <ProjectCardItem
+                        :projects="projects"
+                        :is-loading="isLoading"
+                        @handleProjectClick="handleProjectClick"
+                    />
+                </CardProjectLayout>
+
+                <ListProjectLayout v-show="seeBy === 'list'">
+                    <ProjectListItem
+                        :projects="projects"
+                        :is-loading="isLoading"
+                        @handleProjectClick="handleProjectClick"
+                    />
+                </ListProjectLayout>
             </section>
 
             <ShowComponent>

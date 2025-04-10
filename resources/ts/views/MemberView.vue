@@ -149,10 +149,11 @@
                 <!--  -->
 
                 <div
-                    class="grid grid-cols-1 place-content-start place-items-center w-full h-full overflow-y-auto gap-2 px-2 pt-2"
+                    class="relative grid grid-cols-1 place-content-start place-items-center w-full h-full overflow-y-auto gap-2 px-2 pt-2"
                 >
                     <!-- Member Card -->
                     <div
+                        v-if="!isLoading && members.length > 0"
                         v-for="member in members"
                         :key="member.id"
                         @click="handleMemberCardClick(member.id ?? '')"
@@ -166,6 +167,13 @@
                         </div>
                     </div>
                     <!-- ----------- -->
+
+                    <h1
+                        v-else-if="!isLoading"
+                        class="absolute top-1/2 left-1/2 -translate-x-1/2 text-secondary"
+                    >
+                        ¡No hay registros!
+                    </h1>
                 </div>
             </section>
 
